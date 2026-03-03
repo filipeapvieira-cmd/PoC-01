@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model SourceConfig {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  name           String
+  tier           String   @default("A")
+  docsUrl        String   @default("")
+  authType       String   @default("none")
+  authEnvVar     String?
+  rateLimitNotes String   @default("")
+  licence        String   @default("unspecified")
+  lastStatus     String   @default("unknown") // green, yellow, red, unknown
+  lastRunAt      DateTime?
+  lastError      String?
+  lastLatencyMs  Int?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  ingestionLogs  IngestionLog[]
+  metricSeries   MetricSeries[]
+}
+
+model IngestionLog {
+  id           String   @id @default(cuid())
+  sourceSlug   String
+  jobRunId     String
+  fetchedAt    DateTime @default(now())
+  httpStatus   Int?
+  latencyMs    Int?
+  errorType    String?  // AUTH_MISSING, RATE_LIMITED, INVALID_RESPONSE, PARSE_ERROR, UPSTREAM_DOWN, TIMEOUT
+  errorMessage String?
+  retryCount   Int      @default(0)
+  rawPayload   String?  // truncated to safe size
+  recordCount  Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  source       SourceConfig @relation(fields: [sourceSlug], references: [slug])
+}
+
+model MetricSeries {
+  id          String   @id @default(cuid())
+  metricKey   String
+  sourceSlug  String
+  geoType     String   // council, national, station, etc.
+  geoCode     String   // council code, URI, etc.
+  periodStart DateTime
+  periodEnd   DateTime
+  value       Float
+  unit        String
+  metadata    Json     @default("{}")
+  jobRunId    String
+  createdAt   DateTime @default(now())
+
+  source      SourceConfig @relation(fields: [sourceSlug], references: [slug])
+
+  @@index([sourceSlug])
+  @@index([metricKey])
+  @@index([geoCode])
+  @@index([periodStart, periodEnd])
+}
