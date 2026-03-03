@@ -1,39 +1,53 @@
 import { IntegrationPlugin, IntegrationConfig, GeoQuery, RawFetchResult, MetricSeriesInput } from './interface';
 
+// Council climate scorecard data from mySociety
+// Replace the broken statistics.gov.scot SPARQL integration
 export class StatisticsGovScotPlugin implements IntegrationPlugin {
     getConfig(): IntegrationConfig {
         return {
             slug: 'statistics-gov-scot',
-            name: 'statistics.gov.scot (via data.gov.uk)',
-            description: 'Scottish Government statistics datasets discovered via data.gov.uk CKAN API. The native SPARQL endpoint has TLS issues with Node.js, so we use CKAN dataset discovery instead.',
-            docsUrl: 'https://statistics.gov.scot/home',
+            name: 'Council Climate Scorecards',
+            description: 'mySociety Council Climate Plan Scorecards — climate action scores for every Scottish council. Replaces broken statistics.gov.scot SPARQL endpoint.',
+            docsUrl: 'https://councilclimatescorecards.uk/',
             authType: 'none',
-            rateLimitNotes: 'No published rate limits on CKAN API.',
-            licence: 'Open Government Licence v3.0',
+            rateLimitNotes: 'Static CSV download — no rate limits.',
+            licence: 'Open Government Licence',
             tier: 'A',
-            sampleRequest: 'GET https://ckan.publishing.service.gov.uk/api/3/action/package_search?q=scottish+statistics+population&rows=10',
-            fieldMapping: 'result.results[].title → dataset name, result.count → total datasets',
+            sampleRequest: 'GET https://councilclimatescorecards.uk/scoring/generate-csv/all/',
+            fieldMapping: 'CSV columns: council_name, authority_code, weighted_total, section scores → per-council climate scores',
         };
     }
 
     async fetchSample(geo: GeoQuery): Promise<RawFetchResult> {
         const start = Date.now();
 
-        // Use data.gov.uk CKAN to discover Scottish Government statistics datasets
-        const url = 'https://ckan.publishing.service.gov.uk/api/3/action/package_search?q=scottish+government+statistics+population+council&rows=15';
+        const url = 'https://councilclimatescorecards.uk/scoring/generate-csv/all/';
         const res = await fetch(url, {
-            headers: { 'Accept': 'application/json' },
-            signal: AbortSignal.timeout(15000),
+            headers: { 'Accept': 'text/csv,*/*' },
+            signal: AbortSignal.timeout(20000),
         });
         const latencyMs = Date.now() - start;
 
         if (!res.ok) {
-            const body = await res.text().catch(() => '');
-            throw new Error(`data.gov.uk CKAN API returned ${res.status}: ${body.substring(0, 200)}`);
+            throw new Error(`Council Climate Scorecards returned ${res.status}: ${res.statusText}`);
         }
 
-        const data = await res.json();
-        const payload = JSON.stringify(data, null, 2);
+        const csvText = await res.text();
+
+        // Parse CSV into structured data
+        const lines = csvText.split('\n').filter(l => l.trim());
+        const headers = lines[0]?.split(',').map(h => h.trim().replace(/"/g, '')) ?? [];
+        const rows: Record<string, string>[] = [];
+
+        for (let i = 1; i < lines.length; i++) {
+            const values = parseCSVLine(lines[i]);
+            const row: Record<string, string> = {};
+            headers.forEach((h, idx) => { row[h] = values[idx] ?? ''; });
+            rows.push(row);
+        }
+
+        const data = { headers, rows, totalCouncils: rows.length, rawCsv: csvText };
+        const payload = JSON.stringify({ headers, sampleRows: rows.slice(0, 5), totalCouncils: rows.length }, null, 2);
 
         return {
             data,
@@ -45,55 +59,110 @@ export class StatisticsGovScotPlugin implements IntegrationPlugin {
 
     normalize(raw: unknown): MetricSeriesInput[] {
         const results: MetricSeriesInput[] = [];
-        const data = raw as { result?: { count?: number; results?: Array<{ title?: string; notes?: string; organization?: { title?: string }; metadata_created?: string; num_resources?: number }> } };
+        const data = raw as { headers?: string[]; rows?: Record<string, string>[]; totalCouncils?: number };
 
-        if (!data?.result) return results;
+        if (!data?.rows) return results;
 
         const now = new Date();
-        const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+        const startOfYear = new Date(now.getFullYear(), 0, 1);
+        const endOfYear = new Date(now.getFullYear(), 11, 31);
 
-        // Total count of datasets found
-        if (data.result.count != null) {
+        // Find relevant columns
+        const headers = data.headers ?? [];
+        const nameCol = headers.find(h => h.toLowerCase().includes('council') || h.toLowerCase().includes('authority_name') || h.toLowerCase().includes('name')) ?? headers[0];
+        const codeCol = headers.find(h => h.toLowerCase().includes('authority_code') || h.toLowerCase().includes('code') || h.toLowerCase().includes('slug'));
+        const scoreCol = headers.find(h => h.toLowerCase().includes('weighted_total') || h.toLowerCase().includes('total') || h.toLowerCase().includes('score'));
+
+        // Scottish councils start with S (authority codes)
+        const scottishRows = data.rows.filter(r => {
+            if (codeCol && r[codeCol]) return r[codeCol].startsWith('S') || r[codeCol].startsWith('SCO');
+            // Also try matching by name
+            const name = (r[nameCol ?? ''] ?? '').toLowerCase();
+            return name.includes('edinburgh') || name.includes('glasgow') || name.includes('aberdeen') ||
+                name.includes('dundee') || name.includes('highland') || name.includes('fife') ||
+                name.includes('scottish') || name.includes('council');
+        });
+
+        // If we can't identify Scottish ones, use all rows (the CSV may already be Scotland-only)
+        const targetRows = scottishRows.length > 0 ? scottishRows : data.rows;
+
+        for (const row of targetRows) {
+            const name = row[nameCol ?? ''] ?? 'Unknown';
+            const code = codeCol ? (row[codeCol] ?? name) : name;
+            const score = scoreCol ? parseFloat(row[scoreCol]) : NaN;
+
+            if (isNaN(score)) continue;
+
             results.push({
-                metricKey: 'scot_stats_datasets_count',
+                metricKey: 'council_climate_score',
                 sourceSlug: 'statistics-gov-scot',
-                geoType: 'national',
-                geoCode: 'scotland',
-                periodStart: startOfDay,
-                periodEnd: endOfDay,
-                value: data.result.count,
-                unit: 'datasets',
+                geoType: 'council',
+                geoCode: code,
+                periodStart: startOfYear,
+                periodEnd: endOfYear,
+                value: score,
+                unit: 'score',
                 metadata: {
-                    query: 'scottish government statistics population council',
-                    attribution: 'Scottish Government via data.gov.uk',
-                    licence: 'Open Government Licence v3.0',
+                    councilName: name,
+                    authorityCode: code,
+                    attribution: 'mySociety Council Climate Scorecards',
+                    licence: 'Open Government Licence',
+                    source: 'councilclimatescorecards.uk',
                 },
             });
-        }
 
-        // Individual dataset records
-        const datasets = data.result.results ?? [];
-        for (const ds of datasets) {
-            results.push({
-                metricKey: 'scot_stats_dataset',
-                sourceSlug: 'statistics-gov-scot',
-                geoType: 'national',
-                geoCode: 'scotland',
-                periodStart: ds.metadata_created ? new Date(ds.metadata_created) : startOfDay,
-                periodEnd: endOfDay,
-                value: ds.num_resources ?? 0,
-                unit: 'resources',
-                metadata: {
-                    title: ds.title ?? 'Unknown',
-                    description: (ds.notes ?? '').substring(0, 200),
-                    organization: ds.organization?.title ?? 'Scottish Government',
-                    attribution: 'Scottish Government via data.gov.uk',
-                    licence: 'Open Government Licence v3.0',
-                },
-            });
+            // Also emit section-level scores if available
+            const sectionCols = headers.filter(h =>
+                h.toLowerCase().includes('section') ||
+                h.toLowerCase().includes('s1_') || h.toLowerCase().includes('s2_') ||
+                h.toLowerCase().includes('s3_') || h.toLowerCase().includes('s4_') ||
+                h.toLowerCase().includes('s5_') || h.toLowerCase().includes('s6_') ||
+                h.toLowerCase().includes('s7_')
+            );
+
+            for (const sc of sectionCols.slice(0, 7)) {
+                const sectionVal = parseFloat(row[sc] ?? '');
+                if (isNaN(sectionVal)) continue;
+
+                results.push({
+                    metricKey: `council_climate_${sc.toLowerCase().replace(/[^a-z0-9]/g, '_')}`,
+                    sourceSlug: 'statistics-gov-scot',
+                    geoType: 'council',
+                    geoCode: code,
+                    periodStart: startOfYear,
+                    periodEnd: endOfYear,
+                    value: sectionVal,
+                    unit: 'score',
+                    metadata: {
+                        councilName: name,
+                        section: sc,
+                        attribution: 'mySociety Council Climate Scorecards',
+                    },
+                });
+            }
         }
 
         return results;
     }
+}
+
+// Simple CSV line parser that handles quoted fields
+function parseCSVLine(line: string): string[] {
+    const result: string[] = [];
+    let current = '';
+    let inQuotes = false;
+
+    for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') {
+            inQuotes = !inQuotes;
+        } else if (ch === ',' && !inQuotes) {
+            result.push(current.trim());
+            current = '';
+        } else {
+            current += ch;
+        }
+    }
+    result.push(current.trim());
+    return result;
 }

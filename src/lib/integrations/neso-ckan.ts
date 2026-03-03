@@ -1,42 +1,88 @@
 import { IntegrationPlugin, IntegrationConfig, GeoQuery, RawFetchResult, MetricSeriesInput } from './interface';
 
+// NESO: Fetch actual demand/generation data from specific dataset APIs
 export class NesoCkanPlugin implements IntegrationPlugin {
     getConfig(): IntegrationConfig {
         return {
             slug: 'neso-ckan',
-            name: 'NESO Data Portal (CKAN)',
-            description: 'National Energy System Operator data portal built on CKAN, providing energy datasets for GB including generation, demand, and forecasts.',
+            name: 'NESO Energy Data',
+            description: 'National Energy System Operator data portal — fetches actual energy demand and generation datasets, not just catalog listings.',
             docsUrl: 'https://data.neso.energy/',
             authType: 'none',
-            rateLimitNotes: 'No published rate limits. Standard CKAN API.',
+            rateLimitNotes: 'No published rate limits.',
             licence: 'Various — check per dataset',
             tier: 'B',
-            sampleRequest: 'GET https://api.neso.energy/api/3/action/package_search?q=energy&rows=10',
-            fieldMapping: 'result.results[].name → dataset slug, result.results[].title → name, result.results[].resources → download links',
+            sampleRequest: 'GET https://api.neso.energy/api/3/action/datastore_search?resource_id=<id>&limit=20',
+            fieldMapping: 'result.records → actual data rows with energy metrics',
         };
     }
 
     async fetchSample(geo: GeoQuery): Promise<RawFetchResult> {
         const start = Date.now();
 
-        // Search for energy-related datasets
-        const url = 'https://api.neso.energy/api/3/action/package_search?q=energy+generation&rows=10';
-        const res = await fetch(url, {
+        // Step 1: Search for energy generation/demand datasets
+        const searchUrl = 'https://api.neso.energy/api/3/action/package_search?q=demand+generation+electricity&rows=5';
+        const searchRes = await fetch(searchUrl, {
             headers: { 'Accept': 'application/json' },
             signal: AbortSignal.timeout(15000),
         });
         const latencyMs = Date.now() - start;
 
-        if (!res.ok) {
-            throw new Error(`NESO CKAN API returned ${res.status}: ${res.statusText}`);
+        if (!searchRes.ok) {
+            throw new Error(`NESO API returned ${searchRes.status}: ${searchRes.statusText}`);
         }
 
-        const data = await res.json();
-        const payload = JSON.stringify(data, null, 2);
+        const searchData = await searchRes.json() as {
+            result?: {
+                count?: number;
+                results?: Array<{
+                    name?: string;
+                    title?: string;
+                    notes?: string;
+                    resources?: Array<{ id?: string; url?: string; format?: string; name?: string; datastore_active?: boolean }>;
+                }>;
+            };
+        };
+
+        // Step 2: Try to fetch actual data from first datastore-active resource
+        let datastoreData: unknown = null;
+        let datastoreResourceId = '';
+        let datastoreDatasetTitle = '';
+
+        const datasets = searchData?.result?.results ?? [];
+        for (const ds of datasets) {
+            const dsResource = (ds.resources ?? []).find(r => r.datastore_active && r.id);
+            if (dsResource?.id) {
+                datastoreResourceId = dsResource.id;
+                datastoreDatasetTitle = ds.title ?? ds.name ?? '';
+                try {
+                    const dsUrl = `https://api.neso.energy/api/3/action/datastore_search?resource_id=${dsResource.id}&limit=20`;
+                    const dsRes = await fetch(dsUrl, {
+                        headers: { 'Accept': 'application/json' },
+                        signal: AbortSignal.timeout(15000),
+                    });
+                    if (dsRes.ok) {
+                        datastoreData = await dsRes.json();
+                    }
+                } catch {
+                    // Datastore fetch failed
+                }
+                break;
+            }
+        }
+
+        const combined = {
+            searchResults: searchData,
+            datastoreResourceId,
+            datastoreDatasetTitle,
+            datastoreData,
+        };
+
+        const payload = JSON.stringify(combined, null, 2);
 
         return {
-            data,
-            httpStatus: res.status,
+            data: combined,
+            httpStatus: searchRes.status,
             latencyMs,
             truncatedPayload: payload.length > 50000 ? payload.substring(0, 50000) + '...[TRUNCATED]' : payload,
         };
@@ -44,50 +90,94 @@ export class NesoCkanPlugin implements IntegrationPlugin {
 
     normalize(raw: unknown): MetricSeriesInput[] {
         const results: MetricSeriesInput[] = [];
-        const data = raw as { result?: { count?: number; results?: Array<{ name?: string; title?: string; notes?: string; license_title?: string; num_resources?: number; resources?: Array<{ format?: string; name?: string }> }> } };
-
-        if (!data?.result?.results) return results;
+        const data = raw as {
+            searchResults?: { result?: { count?: number; results?: Array<{ name?: string; title?: string }> } };
+            datastoreResourceId?: string;
+            datastoreDatasetTitle?: string;
+            datastoreData?: { result?: { records?: Array<Record<string, unknown>>; total?: number; fields?: Array<{ id: string; type: string }> } };
+        };
 
         const now = new Date();
         const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
 
         // Dataset discovery count
+        const searchCount = data?.searchResults?.result?.count ?? 0;
         results.push({
-            metricKey: 'neso_datasets_found',
+            metricKey: 'neso_energy_datasets',
             sourceSlug: 'neso-ckan',
             geoType: 'national',
             geoCode: 'GB',
             periodStart: startOfDay,
             periodEnd: endOfDay,
-            value: data.result.count ?? data.result.results.length,
+            value: searchCount,
             unit: 'datasets',
             metadata: {
-                searchQuery: 'energy generation',
+                searchQuery: 'demand generation electricity',
+                datastoreResourceId: data?.datastoreResourceId,
+                datastoreDatasetTitle: data?.datastoreDatasetTitle,
                 attribution: 'National Energy System Operator',
             },
         });
 
-        for (const dataset of data.result.results) {
-            const formats = dataset.resources?.map(r => r.format).filter(Boolean) ?? [];
+        // If we got actual datastore records, normalize them
+        const records = data?.datastoreData?.result?.records ?? [];
+        const fields = data?.datastoreData?.result?.fields ?? [];
+
+        if (records.length > 0) {
+            // Try to identify numeric value columns and date columns
+            const numericFields = fields.filter(f => f.type === 'numeric' || f.type === 'float8' || f.type === 'int4');
+            const dateFields = fields.filter(f => f.type === 'timestamp' || f.type === 'date' || f.id.toLowerCase().includes('date') || f.id.toLowerCase().includes('time'));
+
+            const dateField = dateFields[0]?.id;
+
+            // Emit total records metric
             results.push({
-                metricKey: `neso_dataset_${(dataset.name ?? 'unknown').substring(0, 50)}`,
+                metricKey: 'neso_datastore_records',
                 sourceSlug: 'neso-ckan',
                 geoType: 'national',
                 geoCode: 'GB',
                 periodStart: startOfDay,
                 periodEnd: endOfDay,
-                value: dataset.num_resources ?? 0,
-                unit: 'resources',
+                value: data?.datastoreData?.result?.total ?? records.length,
+                unit: 'records',
                 metadata: {
-                    datasetName: dataset.name,
-                    title: dataset.title,
-                    description: dataset.notes?.substring(0, 200),
-                    licence: dataset.license_title,
-                    formats: [...new Set(formats)],
+                    datasetTitle: data?.datastoreDatasetTitle,
+                    resourceId: data?.datastoreResourceId,
+                    sampleFields: fields.map(f => `${f.id}(${f.type})`).slice(0, 10),
                     attribution: 'National Energy System Operator',
                 },
             });
+
+            // Try to emit actual energy values from numeric columns
+            for (const record of records.slice(0, 10)) {
+                for (const nf of numericFields.slice(0, 3)) {
+                    const val = Number(record[nf.id]);
+                    if (isNaN(val)) continue;
+
+                    const timestamp = dateField && record[dateField]
+                        ? new Date(String(record[dateField]))
+                        : startOfDay;
+                    const validTimestamp = isNaN(timestamp.getTime()) ? startOfDay : timestamp;
+
+                    results.push({
+                        metricKey: `neso_${nf.id.toLowerCase().replace(/[^a-z0-9]/g, '_')}`,
+                        sourceSlug: 'neso-ckan',
+                        geoType: 'national',
+                        geoCode: 'GB',
+                        periodStart: validTimestamp,
+                        periodEnd: validTimestamp,
+                        value: val,
+                        unit: nf.id,
+                        metadata: {
+                            field: nf.id,
+                            fieldType: nf.type,
+                            datasetTitle: data?.datastoreDatasetTitle,
+                            attribution: 'National Energy System Operator',
+                        },
+                    });
+                }
+            }
         }
 
         return results;

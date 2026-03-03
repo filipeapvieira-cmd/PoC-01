@@ -46,6 +46,7 @@ export class OpenChargeMapPlugin implements IntegrationPlugin {
             headers: {
                 'X-API-Key': apiKey,
             },
+            signal: AbortSignal.timeout(15000),
         });
         const latencyMs = Date.now() - start;
 
