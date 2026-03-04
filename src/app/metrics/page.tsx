@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import { Download } from 'lucide-react';
 
 interface MetricRecord {
     id: string;
@@ -111,6 +112,36 @@ export default function MetricsPage() {
 
                 <button className="btn btn-primary btn-sm" onClick={fetchMetrics} disabled={loading} style={{ alignSelf: 'flex-end' }}>
                     {loading ? 'Loading...' : '🔍 Search'}
+                </button>
+                <button
+                    className="btn btn-secondary btn-sm"
+                    style={{ alignSelf: 'flex-end' }}
+                    onClick={() => {
+                        const p = new URLSearchParams();
+                        if (selectedMetricKey) p.set('metricKey', selectedMetricKey);
+                        if (selectedGeoCode) p.set('geoCode', selectedGeoCode);
+                        if (selectedSource) p.set('sourceSlug', selectedSource);
+                        p.set('limit', limit.toString());
+                        p.set('format', 'csv');
+                        window.open(`/api/export?${p}`, '_blank');
+                    }}
+                >
+                    <Download size={14} /> CSV
+                </button>
+                <button
+                    className="btn btn-secondary btn-sm"
+                    style={{ alignSelf: 'flex-end' }}
+                    onClick={() => {
+                        const p = new URLSearchParams();
+                        if (selectedMetricKey) p.set('metricKey', selectedMetricKey);
+                        if (selectedGeoCode) p.set('geoCode', selectedGeoCode);
+                        if (selectedSource) p.set('sourceSlug', selectedSource);
+                        p.set('limit', limit.toString());
+                        p.set('format', 'json');
+                        window.open(`/api/export?${p}`, '_blank');
+                    }}
+                >
+                    <Download size={14} /> JSON
                 </button>
             </div>
 

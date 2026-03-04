@@ -58,7 +58,7 @@ export class ElexonPlugin implements IntegrationPlugin {
         const results: MetricSeriesInput[] = [];
         const data = raw as {
             generation?: { data?: Array<{ fuelType?: string; currentUsageInMW?: number; generation?: number; from?: string; to?: string }> };
-            demand?: { data?: Array<{ settlementDate?: string; settlementPeriod?: number; demand?: number; transmissionSystemDemand?: number; from?: string; to?: string }> };
+            demand?: { data?: Array<{ settlementDate?: string; settlementPeriod?: number; demand?: number; transmissionSystemDemand?: number; initialDemandOutturn?: number; initialTransmissionSystemDemandOutturn?: number; publishTime?: string; startTime?: string; from?: string; to?: string }> };
         };
 
         const now = new Date();
@@ -66,7 +66,9 @@ export class ElexonPlugin implements IntegrationPlugin {
         const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
 
         // Generation by fuel type
-        const genData = data?.generation?.data ?? [];
+        const genArray = Array.isArray(data?.generation) ? data.generation : [];
+        const genData = genArray.length > 0 ? (genArray[0].data ?? []) : (data?.generation?.data ?? []);
+
         let totalGeneration = 0;
         let renewableGeneration = 0;
         const renewableFuels = ['wind', 'solar', 'hydro', 'biomass'];
@@ -135,9 +137,9 @@ export class ElexonPlugin implements IntegrationPlugin {
         // Demand data
         const demandData = data?.demand?.data ?? [];
         for (const entry of demandData.slice(0, 48)) { // Last 48 half-hours = 24 hours
-            const demand = entry.demand ?? entry.transmissionSystemDemand ?? 0;
-            const from = entry.from ? new Date(entry.from) : startOfDay;
-            const to = entry.to ? new Date(entry.to) : endOfDay;
+            const demand = entry.initialDemandOutturn ?? entry.demand ?? entry.initialTransmissionSystemDemandOutturn ?? entry.transmissionSystemDemand ?? 0;
+            const from = entry.startTime ? new Date(entry.startTime) : (entry.from ? new Date(entry.from) : startOfDay);
+            const to = entry.publishTime ? new Date(entry.publishTime) : (entry.to ? new Date(entry.to) : endOfDay);
 
             if (demand > 0) {
                 results.push({

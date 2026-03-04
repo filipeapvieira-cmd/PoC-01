@@ -1,0 +1,2321 @@
+﻿{
+    "metrics":  [
+                    {
+                        "id":  "cmmazhn4r005d648j9zwuz9y0",
+                        "metricKey":  "generation_mix_gas",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "north-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  1.2,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "gas",
+                                         "regionName":  "North Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "970a415a-971b-43c2-8933-2eebafe4f636",
+                        "createdAt":  "2026-03-03T19:11:32.953Z"
+                    },
+                    {
+                        "id":  "cmmazhn4r005a648ji7eo5pe5",
+                        "metricKey":  "carbon_intensity_forecast",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "north-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  6,
+                        "unit":  "gCO2/kWh",
+                        "metadata":  {
+                                         "index":  "very low",
+                                         "licence":  "CC BY 4.0",
+                                         "dnoRegion":  "Scottish Hydro Electric Power Distribution",
+                                         "regionName":  "North Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "970a415a-971b-43c2-8933-2eebafe4f636",
+                        "createdAt":  "2026-03-03T19:11:32.953Z"
+                    },
+                    {
+                        "id":  "cmmazhn4r005b648jxwmzpq05",
+                        "metricKey":  "generation_mix_biomass",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "north-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  1.1,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "biomass",
+                                         "regionName":  "North Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "970a415a-971b-43c2-8933-2eebafe4f636",
+                        "createdAt":  "2026-03-03T19:11:32.953Z"
+                    },
+                    {
+                        "id":  "cmmazhn4r005c648jk6wkbs1q",
+                        "metricKey":  "generation_mix_imports",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "north-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  1.3,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "imports",
+                                         "regionName":  "North Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "970a415a-971b-43c2-8933-2eebafe4f636",
+                        "createdAt":  "2026-03-03T19:11:32.953Z"
+                    },
+                    {
+                        "id":  "cmmazhn4r005e648jcs8irczu",
+                        "metricKey":  "generation_mix_nuclear",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "north-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  2.6,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "nuclear",
+                                         "regionName":  "North Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "970a415a-971b-43c2-8933-2eebafe4f636",
+                        "createdAt":  "2026-03-03T19:11:32.953Z"
+                    },
+                    {
+                        "id":  "cmmazhn4r005f648jpj8n11vg",
+                        "metricKey":  "generation_mix_wind",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "north-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  93.8,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "wind",
+                                         "regionName":  "North Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "970a415a-971b-43c2-8933-2eebafe4f636",
+                        "createdAt":  "2026-03-03T19:11:32.953Z"
+                    },
+                    {
+                        "id":  "cmmazhn4r005g648jpdomn82w",
+                        "metricKey":  "carbon_intensity_forecast",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "south-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  84,
+                        "unit":  "gCO2/kWh",
+                        "metadata":  {
+                                         "index":  "low",
+                                         "licence":  "CC BY 4.0",
+                                         "dnoRegion":  "SP Distribution",
+                                         "regionName":  "South Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "970a415a-971b-43c2-8933-2eebafe4f636",
+                        "createdAt":  "2026-03-03T19:11:32.953Z"
+                    },
+                    {
+                        "id":  "cmmazhn4r005h648jk6dgwqry",
+                        "metricKey":  "generation_mix_biomass",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "south-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  16,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "biomass",
+                                         "regionName":  "South Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "970a415a-971b-43c2-8933-2eebafe4f636",
+                        "createdAt":  "2026-03-03T19:11:32.953Z"
+                    },
+                    {
+                        "id":  "cmmazhn4r005i648jjyfwgxgz",
+                        "metricKey":  "generation_mix_imports",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "south-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  18.9,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "imports",
+                                         "regionName":  "South Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "970a415a-971b-43c2-8933-2eebafe4f636",
+                        "createdAt":  "2026-03-03T19:11:32.953Z"
+                    },
+                    {
+                        "id":  "cmmazhn4r005j648jden9va8z",
+                        "metricKey":  "generation_mix_gas",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "south-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  16.3,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "gas",
+                                         "regionName":  "South Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "970a415a-971b-43c2-8933-2eebafe4f636",
+                        "createdAt":  "2026-03-03T19:11:32.953Z"
+                    },
+                    {
+                        "id":  "cmmazhn4r005k648joyr5n2ct",
+                        "metricKey":  "generation_mix_nuclear",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "south-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  36.2,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "nuclear",
+                                         "regionName":  "South Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "970a415a-971b-43c2-8933-2eebafe4f636",
+                        "createdAt":  "2026-03-03T19:11:32.953Z"
+                    },
+                    {
+                        "id":  "cmmazhn4r005l648jzc7o2n7w",
+                        "metricKey":  "generation_mix_wind",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "south-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  12.6,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "wind",
+                                         "regionName":  "South Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "970a415a-971b-43c2-8933-2eebafe4f636",
+                        "createdAt":  "2026-03-03T19:11:32.953Z"
+                    },
+                    {
+                        "id":  "cmmazhn4r005m648j9ldv31s3",
+                        "metricKey":  "carbon_intensity_forecast",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  146,
+                        "unit":  "gCO2/kWh",
+                        "metadata":  {
+                                         "index":  "moderate",
+                                         "licence":  "CC BY 4.0",
+                                         "dnoRegion":  "Scotland",
+                                         "regionName":  "Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "970a415a-971b-43c2-8933-2eebafe4f636",
+                        "createdAt":  "2026-03-03T19:11:32.953Z"
+                    },
+                    {
+                        "id":  "cmmazhn4r005n648jzo8nfow7",
+                        "metricKey":  "generation_mix_biomass",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  5,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "biomass",
+                                         "regionName":  "Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "970a415a-971b-43c2-8933-2eebafe4f636",
+                        "createdAt":  "2026-03-03T19:11:32.953Z"
+                    },
+                    {
+                        "id":  "cmmazhn4r005o648jrwnxzxwg",
+                        "metricKey":  "generation_mix_imports",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  3.5,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "imports",
+                                         "regionName":  "Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "970a415a-971b-43c2-8933-2eebafe4f636",
+                        "createdAt":  "2026-03-03T19:11:32.953Z"
+                    },
+                    {
+                        "id":  "cmmazhn4r005p648jd8vikrjm",
+                        "metricKey":  "generation_mix_gas",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  35.2,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "gas",
+                                         "regionName":  "Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "970a415a-971b-43c2-8933-2eebafe4f636",
+                        "createdAt":  "2026-03-03T19:11:32.953Z"
+                    },
+                    {
+                        "id":  "cmmazhn4r005q648jbd94ai17",
+                        "metricKey":  "generation_mix_nuclear",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  18.7,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "nuclear",
+                                         "regionName":  "Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "970a415a-971b-43c2-8933-2eebafe4f636",
+                        "createdAt":  "2026-03-03T19:11:32.953Z"
+                    },
+                    {
+                        "id":  "cmmazhn4r005r648j0eb9m7cd",
+                        "metricKey":  "generation_mix_wind",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  37.6,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "wind",
+                                         "regionName":  "Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "970a415a-971b-43c2-8933-2eebafe4f636",
+                        "createdAt":  "2026-03-03T19:11:32.953Z"
+                    },
+                    {
+                        "id":  "cmmazw2aj008v648jzasay5fp",
+                        "metricKey":  "carbon_intensity_forecast",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "north-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  6,
+                        "unit":  "gCO2/kWh",
+                        "metadata":  {
+                                         "index":  "very low",
+                                         "licence":  "CC BY 4.0",
+                                         "dnoRegion":  "Scottish Hydro Electric Power Distribution",
+                                         "regionName":  "North Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "921362b3-b5e5-4741-895f-af3f90a48fa6",
+                        "createdAt":  "2026-03-03T19:22:45.786Z"
+                    },
+                    {
+                        "id":  "cmmazw2aj008w648jnqqnrvri",
+                        "metricKey":  "generation_mix_biomass",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "north-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  1.1,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "biomass",
+                                         "regionName":  "North Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "921362b3-b5e5-4741-895f-af3f90a48fa6",
+                        "createdAt":  "2026-03-03T19:22:45.786Z"
+                    },
+                    {
+                        "id":  "cmmazw2aj008x648j2gk6v8m5",
+                        "metricKey":  "generation_mix_imports",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "north-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  1.3,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "imports",
+                                         "regionName":  "North Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "921362b3-b5e5-4741-895f-af3f90a48fa6",
+                        "createdAt":  "2026-03-03T19:22:45.786Z"
+                    },
+                    {
+                        "id":  "cmmazw2aj008y648jkyv4416i",
+                        "metricKey":  "generation_mix_gas",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "north-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  1.2,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "gas",
+                                         "regionName":  "North Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "921362b3-b5e5-4741-895f-af3f90a48fa6",
+                        "createdAt":  "2026-03-03T19:22:45.786Z"
+                    },
+                    {
+                        "id":  "cmmazw2aj008z648j651rp4e3",
+                        "metricKey":  "generation_mix_nuclear",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "north-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  2.6,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "nuclear",
+                                         "regionName":  "North Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "921362b3-b5e5-4741-895f-af3f90a48fa6",
+                        "createdAt":  "2026-03-03T19:22:45.786Z"
+                    },
+                    {
+                        "id":  "cmmazw2aj0090648j8hse3jff",
+                        "metricKey":  "generation_mix_wind",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "north-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  93.8,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "wind",
+                                         "regionName":  "North Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "921362b3-b5e5-4741-895f-af3f90a48fa6",
+                        "createdAt":  "2026-03-03T19:22:45.786Z"
+                    },
+                    {
+                        "id":  "cmmazw2aj0091648jnizfjr4l",
+                        "metricKey":  "carbon_intensity_forecast",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "south-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  84,
+                        "unit":  "gCO2/kWh",
+                        "metadata":  {
+                                         "index":  "low",
+                                         "licence":  "CC BY 4.0",
+                                         "dnoRegion":  "SP Distribution",
+                                         "regionName":  "South Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "921362b3-b5e5-4741-895f-af3f90a48fa6",
+                        "createdAt":  "2026-03-03T19:22:45.786Z"
+                    },
+                    {
+                        "id":  "cmmazw2aj0092648jjzbcfvnt",
+                        "metricKey":  "generation_mix_biomass",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "south-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  16,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "biomass",
+                                         "regionName":  "South Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "921362b3-b5e5-4741-895f-af3f90a48fa6",
+                        "createdAt":  "2026-03-03T19:22:45.786Z"
+                    },
+                    {
+                        "id":  "cmmazw2aj0093648j9z5o0wyk",
+                        "metricKey":  "generation_mix_imports",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "south-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  18.9,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "imports",
+                                         "regionName":  "South Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "921362b3-b5e5-4741-895f-af3f90a48fa6",
+                        "createdAt":  "2026-03-03T19:22:45.786Z"
+                    },
+                    {
+                        "id":  "cmmazw2aj0094648jv3rfhmpl",
+                        "metricKey":  "generation_mix_gas",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "south-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  16.3,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "gas",
+                                         "regionName":  "South Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "921362b3-b5e5-4741-895f-af3f90a48fa6",
+                        "createdAt":  "2026-03-03T19:22:45.786Z"
+                    },
+                    {
+                        "id":  "cmmazw2aj0095648jgglomzoc",
+                        "metricKey":  "generation_mix_nuclear",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "south-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  36.2,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "nuclear",
+                                         "regionName":  "South Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "921362b3-b5e5-4741-895f-af3f90a48fa6",
+                        "createdAt":  "2026-03-03T19:22:45.786Z"
+                    },
+                    {
+                        "id":  "cmmazw2aj0096648jbvozh64t",
+                        "metricKey":  "generation_mix_wind",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "south-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  12.6,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "wind",
+                                         "regionName":  "South Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "921362b3-b5e5-4741-895f-af3f90a48fa6",
+                        "createdAt":  "2026-03-03T19:22:45.786Z"
+                    },
+                    {
+                        "id":  "cmmazw2aj0097648jwzhjfzvl",
+                        "metricKey":  "carbon_intensity_forecast",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  146,
+                        "unit":  "gCO2/kWh",
+                        "metadata":  {
+                                         "index":  "moderate",
+                                         "licence":  "CC BY 4.0",
+                                         "dnoRegion":  "Scotland",
+                                         "regionName":  "Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "921362b3-b5e5-4741-895f-af3f90a48fa6",
+                        "createdAt":  "2026-03-03T19:22:45.786Z"
+                    },
+                    {
+                        "id":  "cmmazw2aj0098648jpivpbm5v",
+                        "metricKey":  "generation_mix_biomass",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  5,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "biomass",
+                                         "regionName":  "Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "921362b3-b5e5-4741-895f-af3f90a48fa6",
+                        "createdAt":  "2026-03-03T19:22:45.786Z"
+                    },
+                    {
+                        "id":  "cmmazw2aj0099648jha4y6tr5",
+                        "metricKey":  "generation_mix_imports",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  3.5,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "imports",
+                                         "regionName":  "Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "921362b3-b5e5-4741-895f-af3f90a48fa6",
+                        "createdAt":  "2026-03-03T19:22:45.786Z"
+                    },
+                    {
+                        "id":  "cmmazw2aj009a648jwo4vswka",
+                        "metricKey":  "generation_mix_gas",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  35.2,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "gas",
+                                         "regionName":  "Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "921362b3-b5e5-4741-895f-af3f90a48fa6",
+                        "createdAt":  "2026-03-03T19:22:45.786Z"
+                    },
+                    {
+                        "id":  "cmmazw2aj009b648jszhf4rmp",
+                        "metricKey":  "generation_mix_nuclear",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  18.7,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "nuclear",
+                                         "regionName":  "Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "921362b3-b5e5-4741-895f-af3f90a48fa6",
+                        "createdAt":  "2026-03-03T19:22:45.786Z"
+                    },
+                    {
+                        "id":  "cmmazw2aj009c648j77gt9mzi",
+                        "metricKey":  "generation_mix_wind",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  37.6,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "wind",
+                                         "regionName":  "Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "921362b3-b5e5-4741-895f-af3f90a48fa6",
+                        "createdAt":  "2026-03-03T19:22:45.786Z"
+                    },
+                    {
+                        "id":  "cmmazzdk100du648j3duxwzti",
+                        "metricKey":  "carbon_intensity_forecast",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "north-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  6,
+                        "unit":  "gCO2/kWh",
+                        "metadata":  {
+                                         "index":  "very low",
+                                         "licence":  "CC BY 4.0",
+                                         "dnoRegion":  "Scottish Hydro Electric Power Distribution",
+                                         "regionName":  "North Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "814dece4-00cb-4bd5-a2dd-fbf5767fc963",
+                        "createdAt":  "2026-03-03T19:25:20.351Z"
+                    },
+                    {
+                        "id":  "cmmazzdk100dv648ja2a2ttvn",
+                        "metricKey":  "generation_mix_biomass",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "north-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  1.1,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "biomass",
+                                         "regionName":  "North Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "814dece4-00cb-4bd5-a2dd-fbf5767fc963",
+                        "createdAt":  "2026-03-03T19:25:20.351Z"
+                    },
+                    {
+                        "id":  "cmmazzdk100dw648jccok132a",
+                        "metricKey":  "generation_mix_imports",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "north-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  1.3,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "imports",
+                                         "regionName":  "North Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "814dece4-00cb-4bd5-a2dd-fbf5767fc963",
+                        "createdAt":  "2026-03-03T19:25:20.351Z"
+                    },
+                    {
+                        "id":  "cmmazzdk100dx648jbubrnayu",
+                        "metricKey":  "generation_mix_gas",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "north-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  1.2,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "gas",
+                                         "regionName":  "North Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "814dece4-00cb-4bd5-a2dd-fbf5767fc963",
+                        "createdAt":  "2026-03-03T19:25:20.351Z"
+                    },
+                    {
+                        "id":  "cmmazzdk100dy648jp0c0ls3s",
+                        "metricKey":  "generation_mix_nuclear",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "north-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  2.6,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "nuclear",
+                                         "regionName":  "North Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "814dece4-00cb-4bd5-a2dd-fbf5767fc963",
+                        "createdAt":  "2026-03-03T19:25:20.351Z"
+                    },
+                    {
+                        "id":  "cmmazzdk100dz648j6hon8xbs",
+                        "metricKey":  "generation_mix_wind",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "north-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  93.8,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "wind",
+                                         "regionName":  "North Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "814dece4-00cb-4bd5-a2dd-fbf5767fc963",
+                        "createdAt":  "2026-03-03T19:25:20.351Z"
+                    },
+                    {
+                        "id":  "cmmazzdk100e0648jff7ojgud",
+                        "metricKey":  "carbon_intensity_forecast",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "south-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  84,
+                        "unit":  "gCO2/kWh",
+                        "metadata":  {
+                                         "index":  "low",
+                                         "licence":  "CC BY 4.0",
+                                         "dnoRegion":  "SP Distribution",
+                                         "regionName":  "South Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "814dece4-00cb-4bd5-a2dd-fbf5767fc963",
+                        "createdAt":  "2026-03-03T19:25:20.351Z"
+                    },
+                    {
+                        "id":  "cmmazzdk100e1648jc46obufj",
+                        "metricKey":  "generation_mix_biomass",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "south-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  16,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "biomass",
+                                         "regionName":  "South Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "814dece4-00cb-4bd5-a2dd-fbf5767fc963",
+                        "createdAt":  "2026-03-03T19:25:20.351Z"
+                    },
+                    {
+                        "id":  "cmmazzdk100e2648jq9r3qw7p",
+                        "metricKey":  "generation_mix_imports",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "south-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  18.9,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "imports",
+                                         "regionName":  "South Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "814dece4-00cb-4bd5-a2dd-fbf5767fc963",
+                        "createdAt":  "2026-03-03T19:25:20.351Z"
+                    },
+                    {
+                        "id":  "cmmazzdk100e3648j7hehimxw",
+                        "metricKey":  "generation_mix_gas",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "south-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  16.3,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "gas",
+                                         "regionName":  "South Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "814dece4-00cb-4bd5-a2dd-fbf5767fc963",
+                        "createdAt":  "2026-03-03T19:25:20.351Z"
+                    },
+                    {
+                        "id":  "cmmazzdk100e4648jamyiqgna",
+                        "metricKey":  "generation_mix_nuclear",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "south-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  36.2,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "nuclear",
+                                         "regionName":  "South Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "814dece4-00cb-4bd5-a2dd-fbf5767fc963",
+                        "createdAt":  "2026-03-03T19:25:20.351Z"
+                    },
+                    {
+                        "id":  "cmmazzdk100e5648jz081e4b2",
+                        "metricKey":  "generation_mix_wind",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "south-scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  12.6,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "wind",
+                                         "regionName":  "South Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "814dece4-00cb-4bd5-a2dd-fbf5767fc963",
+                        "createdAt":  "2026-03-03T19:25:20.351Z"
+                    },
+                    {
+                        "id":  "cmmazzdk100e6648jvy0ep6xg",
+                        "metricKey":  "carbon_intensity_forecast",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  146,
+                        "unit":  "gCO2/kWh",
+                        "metadata":  {
+                                         "index":  "moderate",
+                                         "licence":  "CC BY 4.0",
+                                         "dnoRegion":  "Scotland",
+                                         "regionName":  "Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "814dece4-00cb-4bd5-a2dd-fbf5767fc963",
+                        "createdAt":  "2026-03-03T19:25:20.351Z"
+                    },
+                    {
+                        "id":  "cmmazzdk100e7648j81zpx9gk",
+                        "metricKey":  "generation_mix_biomass",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  5,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "biomass",
+                                         "regionName":  "Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "814dece4-00cb-4bd5-a2dd-fbf5767fc963",
+                        "createdAt":  "2026-03-03T19:25:20.351Z"
+                    },
+                    {
+                        "id":  "cmmazzdk100e8648jbzzqzegh",
+                        "metricKey":  "generation_mix_imports",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  3.5,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "imports",
+                                         "regionName":  "Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "814dece4-00cb-4bd5-a2dd-fbf5767fc963",
+                        "createdAt":  "2026-03-03T19:25:20.351Z"
+                    },
+                    {
+                        "id":  "cmmazzdk100e9648jlpzwdj9b",
+                        "metricKey":  "generation_mix_gas",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  35.2,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "gas",
+                                         "regionName":  "Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "814dece4-00cb-4bd5-a2dd-fbf5767fc963",
+                        "createdAt":  "2026-03-03T19:25:20.351Z"
+                    },
+                    {
+                        "id":  "cmmazzdk100ea648jfffv235i",
+                        "metricKey":  "generation_mix_nuclear",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  18.7,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "nuclear",
+                                         "regionName":  "Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "814dece4-00cb-4bd5-a2dd-fbf5767fc963",
+                        "createdAt":  "2026-03-03T19:25:20.351Z"
+                    },
+                    {
+                        "id":  "cmmazzdk100eb648js42zh3td",
+                        "metricKey":  "generation_mix_wind",
+                        "sourceSlug":  "carbon-intensity",
+                        "geoType":  "region",
+                        "geoCode":  "scotland",
+                        "periodStart":  "2026-03-03T18:30:00.000Z",
+                        "periodEnd":  "2026-03-03T19:00:00.000Z",
+                        "value":  37.6,
+                        "unit":  "percent",
+                        "metadata":  {
+                                         "licence":  "CC BY 4.0",
+                                         "fuelType":  "wind",
+                                         "regionName":  "Scotland",
+                                         "attribution":  "National Grid ESO"
+                                     },
+                        "jobRunId":  "814dece4-00cb-4bd5-a2dd-fbf5767fc963",
+                        "createdAt":  "2026-03-03T19:25:20.351Z"
+                    },
+                    {
+                        "id":  "cmmb001ic00iq648jke1qlrf4",
+                        "metricKey":  "ev_charger_station",
+                        "sourceSlug":  "openchargemap",
+                        "geoType":  "point",
+                        "geoCode":  "ocm_105061",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  2,
+                        "unit":  "charge_points",
+                        "metadata":  {
+                                         "lat":  55.94017,
+                                         "lon":  -3.18219,
+                                         "town":  "Edinburgh",
+                                         "licence":  "CC BY-SA",
+                                         "postcode":  "EH19 1PL",
+                                         "attribution":  "OpenChargeMap",
+                                         "stationName":  "Summerhall, Edinburgh",
+                                         "totalPowerKW":  7,
+                                         "connectionCount":  1
+                                     },
+                        "jobRunId":  "970d24ec-5339-496a-9a83-7e6e903111cf",
+                        "createdAt":  "2026-03-03T19:25:51.395Z"
+                    },
+                    {
+                        "id":  "cmmb001ic00ip648jqrrkmuuc",
+                        "metricKey":  "ev_charger_station",
+                        "sourceSlug":  "openchargemap",
+                        "geoType":  "point",
+                        "geoCode":  "ocm_95216",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  2,
+                        "unit":  "charge_points",
+                        "metadata":  {
+                                         "lat":  55.946718,
+                                         "lon":  -3.208237,
+                                         "town":  "Edinburgh",
+                                         "licence":  "CC BY-SA",
+                                         "postcode":  "EH3 9SR",
+                                         "attribution":  "OpenChargeMap",
+                                         "stationName":  "Sheraton Grand Hotel \u0026 Spa",
+                                         "totalPowerKW":  22,
+                                         "connectionCount":  1
+                                     },
+                        "jobRunId":  "970d24ec-5339-496a-9a83-7e6e903111cf",
+                        "createdAt":  "2026-03-03T19:25:51.395Z"
+                    },
+                    {
+                        "id":  "cmmb001ic00io648jyafp6dnf",
+                        "metricKey":  "ev_charger_station",
+                        "sourceSlug":  "openchargemap",
+                        "geoType":  "point",
+                        "geoCode":  "ocm_287525",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  1,
+                        "unit":  "charge_points",
+                        "metadata":  {
+                                         "lat":  55.963821,
+                                         "lon":  -3.197269,
+                                         "town":  "Edinburgh",
+                                         "licence":  "CC BY-SA",
+                                         "postcode":  "EH7 4EW",
+                                         "attribution":  "OpenChargeMap",
+                                         "stationName":  "Tesco Superstore - Broughton Road",
+                                         "totalPowerKW":  14,
+                                         "connectionCount":  2
+                                     },
+                        "jobRunId":  "970d24ec-5339-496a-9a83-7e6e903111cf",
+                        "createdAt":  "2026-03-03T19:25:51.395Z"
+                    },
+                    {
+                        "id":  "cmmb001ic00in648j9o144t58",
+                        "metricKey":  "ev_charger_station",
+                        "sourceSlug":  "openchargemap",
+                        "geoType":  "point",
+                        "geoCode":  "ocm_16520",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  1,
+                        "unit":  "charge_points",
+                        "metadata":  {
+                                         "lat":  55.9454577,
+                                         "lon":  -3.20160090000002,
+                                         "town":  "Edinburgh",
+                                         "licence":  "CC BY-SA",
+                                         "postcode":  "EH3 9DJ",
+                                         "attribution":  "OpenChargeMap",
+                                         "stationName":  "The Knight Residence",
+                                         "totalPowerKW":  7,
+                                         "connectionCount":  1
+                                     },
+                        "jobRunId":  "970d24ec-5339-496a-9a83-7e6e903111cf",
+                        "createdAt":  "2026-03-03T19:25:51.395Z"
+                    },
+                    {
+                        "id":  "cmmb001ic00im648jgt7geq5q",
+                        "metricKey":  "ev_charger_station",
+                        "sourceSlug":  "openchargemap",
+                        "geoType":  "point",
+                        "geoCode":  "ocm_255859",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  1,
+                        "unit":  "charge_points",
+                        "metadata":  {
+                                         "lat":  55.942754,
+                                         "lon":  -3.188781,
+                                         "town":  "Edinburgh",
+                                         "licence":  "CC BY-SA",
+                                         "postcode":  "EH8 9LJ",
+                                         "attribution":  "OpenChargeMap",
+                                         "stationName":  "University of Edinburgh Main Library Car Park",
+                                         "totalPowerKW":  7,
+                                         "connectionCount":  1
+                                     },
+                        "jobRunId":  "970d24ec-5339-496a-9a83-7e6e903111cf",
+                        "createdAt":  "2026-03-03T19:25:51.395Z"
+                    },
+                    {
+                        "id":  "cmmb001ic00il648jmln59762",
+                        "metricKey":  "ev_charger_station",
+                        "sourceSlug":  "openchargemap",
+                        "geoType":  "point",
+                        "geoCode":  "ocm_287518",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  1,
+                        "unit":  "charge_points",
+                        "metadata":  {
+                                         "lat":  55.94501,
+                                         "lon":  -3.19946,
+                                         "town":  "Edinburgh",
+                                         "licence":  "CC BY-SA",
+                                         "postcode":  "EH3 9DE",
+                                         "attribution":  "OpenChargeMap",
+                                         "stationName":  "DRAX00201",
+                                         "totalPowerKW":  44,
+                                         "connectionCount":  2
+                                     },
+                        "jobRunId":  "970d24ec-5339-496a-9a83-7e6e903111cf",
+                        "createdAt":  "2026-03-03T19:25:51.395Z"
+                    },
+                    {
+                        "id":  "cmmb001ic00ik648jayy7c7wm",
+                        "metricKey":  "ev_charger_station",
+                        "sourceSlug":  "openchargemap",
+                        "geoType":  "point",
+                        "geoCode":  "ocm_47608",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  4,
+                        "unit":  "charge_points",
+                        "metadata":  {
+                                         "lat":  55.94307,
+                                         "lon":  -3.18627,
+                                         "town":  "Edinburgh",
+                                         "licence":  "CC BY-SA",
+                                         "postcode":  "EH8 9LN",
+                                         "attribution":  "OpenChargeMap",
+                                         "stationName":  "David Hume Tower Car Park",
+                                         "totalPowerKW":  7,
+                                         "connectionCount":  1
+                                     },
+                        "jobRunId":  "970d24ec-5339-496a-9a83-7e6e903111cf",
+                        "createdAt":  "2026-03-03T19:25:51.395Z"
+                    },
+                    {
+                        "id":  "cmmb001ic00ij648je0txx3h9",
+                        "metricKey":  "ev_charger_station",
+                        "sourceSlug":  "openchargemap",
+                        "geoType":  "point",
+                        "geoCode":  "ocm_287516",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  1,
+                        "unit":  "charge_points",
+                        "metadata":  {
+                                         "lat":  55.944632,
+                                         "lon":  -3.197533,
+                                         "town":  "Edinburgh",
+                                         "licence":  "CC BY-SA",
+                                         "postcode":  "EH3 9EW",
+                                         "attribution":  "OpenChargeMap",
+                                         "stationName":  "FC18111",
+                                         "totalPowerKW":  14,
+                                         "connectionCount":  2
+                                     },
+                        "jobRunId":  "970d24ec-5339-496a-9a83-7e6e903111cf",
+                        "createdAt":  "2026-03-03T19:25:51.395Z"
+                    },
+                    {
+                        "id":  "cmmb001ic00ii648jqbdihx59",
+                        "metricKey":  "ev_charger_station",
+                        "sourceSlug":  "openchargemap",
+                        "geoType":  "point",
+                        "geoCode":  "ocm_91957",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  2,
+                        "unit":  "charge_points",
+                        "metadata":  {
+                                         "lat":  55.9615190356834,
+                                         "lon":  -3.18696601188933,
+                                         "town":  "Edinburgh",
+                                         "licence":  "CC BY-SA",
+                                         "postcode":  "EH7 4BF",
+                                         "attribution":  "OpenChargeMap",
+                                         "stationName":  "Lothian Buses Annandale Depot",
+                                         "totalPowerKW":  7,
+                                         "connectionCount":  1
+                                     },
+                        "jobRunId":  "970d24ec-5339-496a-9a83-7e6e903111cf",
+                        "createdAt":  "2026-03-03T19:25:51.395Z"
+                    },
+                    {
+                        "id":  "cmmb001ic00ih648jjayki1sv",
+                        "metricKey":  "ev_charger_station",
+                        "sourceSlug":  "openchargemap",
+                        "geoType":  "point",
+                        "geoCode":  "ocm_146204",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  2,
+                        "unit":  "charge_points",
+                        "metadata":  {
+                                         "lat":  55.951319,
+                                         "lon":  -3.1753173,
+                                         "town":  "Horse Wynd",
+                                         "licence":  "CC BY-SA",
+                                         "postcode":  "EH99 1SP",
+                                         "attribution":  "OpenChargeMap",
+                                         "stationName":  "Scottish Parliament Building, Edinburgh",
+                                         "totalPowerKW":  22,
+                                         "connectionCount":  1
+                                     },
+                        "jobRunId":  "970d24ec-5339-496a-9a83-7e6e903111cf",
+                        "createdAt":  "2026-03-03T19:25:51.395Z"
+                    },
+                    {
+                        "id":  "cmmb001ic00ig648joku7ul0u",
+                        "metricKey":  "ev_charger_station",
+                        "sourceSlug":  "openchargemap",
+                        "geoType":  "point",
+                        "geoCode":  "ocm_5160",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  4,
+                        "unit":  "charge_points",
+                        "metadata":  {
+                                         "lat":  55.950656583881,
+                                         "lon":  -3.17571401596069,
+                                         "town":  "Edinburgh",
+                                         "licence":  "CC BY-SA",
+                                         "postcode":  "EH8 8AS",
+                                         "attribution":  "OpenChargeMap",
+                                         "stationName":  "Our Dynamic Earth",
+                                         "totalPowerKW":  17,
+                                         "connectionCount":  3
+                                     },
+                        "jobRunId":  "970d24ec-5339-496a-9a83-7e6e903111cf",
+                        "createdAt":  "2026-03-03T19:25:51.395Z"
+                    },
+                    {
+                        "id":  "cmmb001ic00if648j3ysv0rzq",
+                        "metricKey":  "ev_charger_station",
+                        "sourceSlug":  "openchargemap",
+                        "geoType":  "point",
+                        "geoCode":  "ocm_48321",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  4,
+                        "unit":  "charge_points",
+                        "metadata":  {
+                                         "lat":  55.948659,
+                                         "lon":  -3.184486,
+                                         "town":  "Edinburgh",
+                                         "licence":  "CC BY-SA",
+                                         "postcode":  "EH1 1LT",
+                                         "attribution":  "OpenChargeMap",
+                                         "stationName":  "High School Yards",
+                                         "totalPowerKW":  22,
+                                         "connectionCount":  1
+                                     },
+                        "jobRunId":  "970d24ec-5339-496a-9a83-7e6e903111cf",
+                        "createdAt":  "2026-03-03T19:25:51.395Z"
+                    },
+                    {
+                        "id":  "cmmb001ic00ie648jmx3ddf3l",
+                        "metricKey":  "ev_charger_station",
+                        "sourceSlug":  "openchargemap",
+                        "geoType":  "point",
+                        "geoCode":  "ocm_146178",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  4,
+                        "unit":  "charge_points",
+                        "metadata":  {
+                                         "lat":  55.9484,
+                                         "lon":  -3.18617,
+                                         "town":  "University of Edinburgh",
+                                         "licence":  "CC BY-SA",
+                                         "postcode":  "EH1 1LT",
+                                         "attribution":  "OpenChargeMap",
+                                         "stationName":  "University of Edinburgh, Robertson Close Car Park Upper Level, Edinburgh",
+                                         "totalPowerKW":  7,
+                                         "connectionCount":  1
+                                     },
+                        "jobRunId":  "970d24ec-5339-496a-9a83-7e6e903111cf",
+                        "createdAt":  "2026-03-03T19:25:51.395Z"
+                    },
+                    {
+                        "id":  "cmmb001ic00id648jgq3f0soi",
+                        "metricKey":  "ev_charger_station",
+                        "sourceSlug":  "openchargemap",
+                        "geoType":  "point",
+                        "geoCode":  "ocm_93601",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  2,
+                        "unit":  "charge_points",
+                        "metadata":  {
+                                         "lat":  55.94924,
+                                         "lon":  -3.18588,
+                                         "town":  "Robertson Close",
+                                         "licence":  "CC BY-SA",
+                                         "postcode":  "EH1 1LT",
+                                         "attribution":  "OpenChargeMap",
+                                         "stationName":  "Lower Car Park, Edinburgh",
+                                         "totalPowerKW":  29,
+                                         "connectionCount":  2
+                                     },
+                        "jobRunId":  "970d24ec-5339-496a-9a83-7e6e903111cf",
+                        "createdAt":  "2026-03-03T19:25:51.395Z"
+                    },
+                    {
+                        "id":  "cmmb001ic00ic648j2psanp0g",
+                        "metricKey":  "ev_charger_station",
+                        "sourceSlug":  "openchargemap",
+                        "geoType":  "point",
+                        "geoCode":  "ocm_9661",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  6,
+                        "unit":  "charge_points",
+                        "metadata":  {
+                                         "lat":  55.949891,
+                                         "lon":  -3.186614,
+                                         "town":  "Edinburgh",
+                                         "licence":  "CC BY-SA",
+                                         "postcode":  "EH1 1TH",
+                                         "attribution":  "OpenChargeMap",
+                                         "stationName":  "Radisson Blu Edinburgh",
+                                         "totalPowerKW":  34,
+                                         "connectionCount":  6
+                                     },
+                        "jobRunId":  "970d24ec-5339-496a-9a83-7e6e903111cf",
+                        "createdAt":  "2026-03-03T19:25:51.395Z"
+                    },
+                    {
+                        "id":  "cmmb001ic00ib648jyl6cqf3y",
+                        "metricKey":  "ev_charger_station",
+                        "sourceSlug":  "openchargemap",
+                        "geoType":  "point",
+                        "geoCode":  "ocm_131036",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  2,
+                        "unit":  "charge_points",
+                        "metadata":  {
+                                         "lat":  55.950078,
+                                         "lon":  -3.186821,
+                                         "town":  "Edinburgh",
+                                         "licence":  "CC BY-SA",
+                                         "postcode":  "EH12 9DN",
+                                         "attribution":  "OpenChargeMap",
+                                         "stationName":  "Radisson Blu Hotel Edinburgh",
+                                         "totalPowerKW":  13,
+                                         "connectionCount":  1
+                                     },
+                        "jobRunId":  "970d24ec-5339-496a-9a83-7e6e903111cf",
+                        "createdAt":  "2026-03-03T19:25:51.395Z"
+                    },
+                    {
+                        "id":  "cmmb001ic00ia648jr5fhv97m",
+                        "metricKey":  "ev_charger_station",
+                        "sourceSlug":  "openchargemap",
+                        "geoType":  "point",
+                        "geoCode":  "ocm_194241",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  84,
+                        "unit":  "charge_points",
+                        "metadata":  {
+                                         "lat":  55.9525607158964,
+                                         "lon":  -3.1832206544613655,
+                                         "town":  "Edinburgh",
+                                         "licence":  "CC BY-SA",
+                                         "postcode":  "EH8 8BG",
+                                         "attribution":  "OpenChargeMap",
+                                         "stationName":  "Edinburgh Waveley Railway Station Car Park",
+                                         "totalPowerKW":  22,
+                                         "connectionCount":  1
+                                     },
+                        "jobRunId":  "970d24ec-5339-496a-9a83-7e6e903111cf",
+                        "createdAt":  "2026-03-03T19:25:51.395Z"
+                    },
+                    {
+                        "id":  "cmmb001ic00i9648jjbah0pfp",
+                        "metricKey":  "ev_charger_station",
+                        "sourceSlug":  "openchargemap",
+                        "geoType":  "point",
+                        "geoCode":  "ocm_195264",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  15,
+                        "unit":  "charge_points",
+                        "metadata":  {
+                                         "lat":  55.9547941,
+                                         "lon":  -3.1885799,
+                                         "town":  "Quarter",
+                                         "licence":  "CC BY-SA",
+                                         "postcode":  "EH1 3AD",
+                                         "attribution":  "OpenChargeMap",
+                                         "stationName":  "St James Quarter-Level B2",
+                                         "totalPowerKW":  105,
+                                         "connectionCount":  15
+                                     },
+                        "jobRunId":  "970d24ec-5339-496a-9a83-7e6e903111cf",
+                        "createdAt":  "2026-03-03T19:25:51.395Z"
+                    },
+                    {
+                        "id":  "cmmb001ic00i8648jl8m6qahj",
+                        "metricKey":  "ev_charger_station",
+                        "sourceSlug":  "openchargemap",
+                        "geoType":  "point",
+                        "geoCode":  "ocm_195299",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  8,
+                        "unit":  "charge_points",
+                        "metadata":  {
+                                         "lat":  55.95479,
+                                         "lon":  -3.1885916,
+                                         "town":  "Quarter",
+                                         "licence":  "CC BY-SA",
+                                         "postcode":  "EH1 3AD",
+                                         "attribution":  "OpenChargeMap",
+                                         "stationName":  "St James Quarter-Level B3",
+                                         "totalPowerKW":  105,
+                                         "connectionCount":  15
+                                     },
+                        "jobRunId":  "970d24ec-5339-496a-9a83-7e6e903111cf",
+                        "createdAt":  "2026-03-03T19:25:51.395Z"
+                    },
+                    {
+                        "id":  "cmmb001ic00i7648jaymwtgky",
+                        "metricKey":  "ev_charger_station",
+                        "sourceSlug":  "openchargemap",
+                        "geoType":  "point",
+                        "geoCode":  "ocm_195263",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  7,
+                        "unit":  "charge_points",
+                        "metadata":  {
+                                         "lat":  55.95479,
+                                         "lon":  -3.1885916,
+                                         "town":  "Quarter",
+                                         "licence":  "CC BY-SA",
+                                         "postcode":  "EH1 3AD",
+                                         "attribution":  "OpenChargeMap",
+                                         "stationName":  "St James Quarter-Level B1",
+                                         "totalPowerKW":  105,
+                                         "connectionCount":  15
+                                     },
+                        "jobRunId":  "970d24ec-5339-496a-9a83-7e6e903111cf",
+                        "createdAt":  "2026-03-03T19:25:51.395Z"
+                    },
+                    {
+                        "id":  "cmmb001ic00i6648jqmz9elex",
+                        "metricKey":  "ev_charger_count",
+                        "sourceSlug":  "openchargemap",
+                        "geoType":  "council",
+                        "geoCode":  "S12000036",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  50,
+                        "unit":  "stations",
+                        "metadata":  {
+                                         "center":  "Edinburgh",
+                                         "licence":  "CC BY-SA",
+                                         "attribution":  "OpenChargeMap",
+                                         "searchRadius":  "25km"
+                                     },
+                        "jobRunId":  "970d24ec-5339-496a-9a83-7e6e903111cf",
+                        "createdAt":  "2026-03-03T19:25:51.395Z"
+                    },
+                    {
+                        "id":  "cmmb0016k00hj648j3eiag2p9",
+                        "metricKey":  "neso_datastore_records",
+                        "sourceSlug":  "neso-ckan",
+                        "geoType":  "national",
+                        "geoCode":  "GB",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  250,
+                        "unit":  "records",
+                        "metadata":  {
+                                         "resourceId":  "41fb4ca1-7b59-4fce-b480-b46682f346c9",
+                                         "attribution":  "National Energy System Operator",
+                                         "datasetTitle":  "Regional breakdown of FES data (Electricity)",
+                                         "sampleFields":  [
+                                                              "_id(int)",
+                                                              "GSP ID(text)",
+                                                              "GSP Group(text)",
+                                                              "Minor FLOP(text)",
+                                                              "Name(text)",
+                                                              "Latitude(numeric)",
+                                                              "Longitude(numeric)",
+                                                              "Comments(text)"
+                                                          ]
+                                     },
+                        "jobRunId":  "e9b5dba1-6bbc-40d4-855b-4fa9df30c75b",
+                        "createdAt":  "2026-03-03T19:25:50.968Z"
+                    },
+                    {
+                        "id":  "cmmb0016k00hi648jbikwwuzk",
+                        "metricKey":  "neso_energy_datasets",
+                        "sourceSlug":  "neso-ckan",
+                        "geoType":  "national",
+                        "geoCode":  "GB",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  44,
+                        "unit":  "datasets",
+                        "metadata":  {
+                                         "attribution":  "National Energy System Operator",
+                                         "searchQuery":  "demand generation electricity",
+                                         "datastoreResourceId":  "41fb4ca1-7b59-4fce-b480-b46682f346c9",
+                                         "datastoreDatasetTitle":  "Regional breakdown of FES data (Electricity)"
+                                     },
+                        "jobRunId":  "e9b5dba1-6bbc-40d4-855b-4fa9df30c75b",
+                        "createdAt":  "2026-03-03T19:25:50.968Z"
+                    },
+                    {
+                        "id":  "cmmb000ua00hf648jn3y7icsu",
+                        "metricKey":  "ons_sustainability_datasets",
+                        "sourceSlug":  "ons",
+                        "geoType":  "national",
+                        "geoCode":  "UK",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  20,
+                        "unit":  "datasets",
+                        "metadata":  {
+                                         "licence":  "Open Government Licence v3.0",
+                                         "keywords":  [
+                                                          "emission",
+                                                          "energy",
+                                                          "environment",
+                                                          "waste",
+                                                          "transport",
+                                                          "population",
+                                                          "well-being",
+                                                          "wellbeing",
+                                                          "health",
+                                                          "housing",
+                                                          "climate"
+                                                      ],
+                                         "attribution":  "Office for National Statistics"
+                                     },
+                        "jobRunId":  "a5e909e5-4aff-4985-b086-ebaaea48e165",
+                        "createdAt":  "2026-03-03T19:25:50.527Z"
+                    },
+                    {
+                        "id":  "cmmb000ua00he648jn2jvkgyv",
+                        "metricKey":  "ons_dataset_ageing-population-estimates",
+                        "sourceSlug":  "ons",
+                        "geoType":  "national",
+                        "geoCode":  "UK",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  1,
+                        "unit":  "dataset",
+                        "metadata":  {
+                                         "title":  "Local authority ageing statistics, based on annual mid-year population estimates",
+                                         "licence":  "Open Government Licence v3.0",
+                                         "datasetId":  "ageing-population-estimates",
+                                         "attribution":  "Office for National Statistics",
+                                         "description":  "Indicators included have been derived from the published 2019 mid-year population estimates for the UK, England, Wales, Scotland and Northern Ireland. These are the number of persons and percentage of",
+                                         "releaseFrequency":  "Annual",
+                                         "sustainabilityRelevant":  true
+                                     },
+                        "jobRunId":  "a5e909e5-4aff-4985-b086-ebaaea48e165",
+                        "createdAt":  "2026-03-03T19:25:50.527Z"
+                    },
+                    {
+                        "id":  "cmmazwx6s00bz648ji6l47cc7",
+                        "metricKey":  "ons_dataset_weekly-deaths-health-board",
+                        "sourceSlug":  "ons",
+                        "geoType":  "national",
+                        "geoCode":  "UK",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  1,
+                        "unit":  "dataset",
+                        "metadata":  {
+                                         "title":  "Death registrations and occurrences by health board and place of death",
+                                         "licence":  "Open Government Licence v3.0",
+                                         "datasetId":  "weekly-deaths-health-board",
+                                         "attribution":  "Office for National Statistics",
+                                         "description":  "Provisional counts of the number of deaths registered in Wales, by health board and place of death, in the latest weeks for which data are available.",
+                                         "releaseFrequency":  "Weekly",
+                                         "sustainabilityRelevant":  true
+                                     },
+                        "jobRunId":  "c8606218-dcc6-40b6-a07e-7a7a5bc62b5e",
+                        "createdAt":  "2026-03-03T19:23:25.827Z"
+                    },
+                    {
+                        "id":  "cmmazwx6s00c0648jigndmzr0",
+                        "metricKey":  "ons_dataset_sexual-orientation-by-region",
+                        "sourceSlug":  "ons",
+                        "geoType":  "national",
+                        "geoCode":  "UK",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  1,
+                        "unit":  "dataset",
+                        "metadata":  {
+                                         "title":  "Sexual orientation by English regions and UK countries",
+                                         "licence":  "Open Government Licence v3.0",
+                                         "datasetId":  "sexual-orientation-by-region",
+                                         "attribution":  "Office for National Statistics",
+                                         "description":  "Sexual orientation in the UK from 2012 to 2020 by region.\n\nData source: Annual Population Survey, ONS\n",
+                                         "unitOfMeasure":  "Number of people (thousands) and percentage",
+                                         "releaseFrequency":  "Annual",
+                                         "sustainabilityRelevant":  true
+                                     },
+                        "jobRunId":  "c8606218-dcc6-40b6-a07e-7a7a5bc62b5e",
+                        "createdAt":  "2026-03-03T19:23:25.827Z"
+                    },
+                    {
+                        "id":  "cmmazwx6s00c1648js9kiug72",
+                        "metricKey":  "ons_dataset_sexual-orientation-by-age-and-sex",
+                        "sourceSlug":  "ons",
+                        "geoType":  "national",
+                        "geoCode":  "UK",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  1,
+                        "unit":  "dataset",
+                        "metadata":  {
+                                         "title":  "Sexual orientation by age and sex",
+                                         "licence":  "Open Government Licence v3.0",
+                                         "datasetId":  "sexual-orientation-by-age-and-sex",
+                                         "attribution":  "Office for National Statistics",
+                                         "description":  "Sexual orientation in the UK by sex and age, 2014 to 2020.\n\nSource: Annual Population Survey, ONS",
+                                         "unitOfMeasure":  "Number of people (thousands) and percentage",
+                                         "releaseFrequency":  "Annual",
+                                         "sustainabilityRelevant":  true
+                                     },
+                        "jobRunId":  "c8606218-dcc6-40b6-a07e-7a7a5bc62b5e",
+                        "createdAt":  "2026-03-03T19:23:25.827Z"
+                    },
+                    {
+                        "id":  "cmmazwx6s00c2648j608stqe8",
+                        "metricKey":  "ons_dataset_projections-older-people-sex-ratios",
+                        "sourceSlug":  "ons",
+                        "geoType":  "national",
+                        "geoCode":  "UK",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  1,
+                        "unit":  "dataset",
+                        "metadata":  {
+                                         "title":  "Local authority ageing statistics, projected sex ratios for older people",
+                                         "licence":  "Open Government Licence v3.0",
+                                         "datasetId":  "projections-older-people-sex-ratios",
+                                         "attribution":  "Office for National Statistics",
+                                         "description":  "Projected indicators included are derived from the published 2018-based subnational population projections for England, Wales, Scotland and Northern Ireland up to the year 2043. The indicators are the",
+                                         "releaseFrequency":  "Biennial",
+                                         "sustainabilityRelevant":  true
+                                     },
+                        "jobRunId":  "c8606218-dcc6-40b6-a07e-7a7a5bc62b5e",
+                        "createdAt":  "2026-03-03T19:23:25.827Z"
+                    },
+                    {
+                        "id":  "cmmazwx6s00c3648jg3tj9k8z",
+                        "metricKey":  "ons_dataset_older-people-sex-ratios",
+                        "sourceSlug":  "ons",
+                        "geoType":  "national",
+                        "geoCode":  "UK",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  1,
+                        "unit":  "dataset",
+                        "metadata":  {
+                                         "title":  "Local authority ageing statistics, sex ratios for people aged 65 and over and 85 and over",
+                                         "licence":  "Open Government Licence v3.0",
+                                         "datasetId":  "older-people-sex-ratios",
+                                         "attribution":  "Office for National Statistics",
+                                         "description":  "Both indicators included have been derived from the published 2019 mid-year population estimates for the UK, England, Wales, Scotland and Northern Ireland. These are sex ratios for people aged 65 year",
+                                         "releaseFrequency":  "Annual",
+                                         "sustainabilityRelevant":  true
+                                     },
+                        "jobRunId":  "c8606218-dcc6-40b6-a07e-7a7a5bc62b5e",
+                        "createdAt":  "2026-03-03T19:23:25.827Z"
+                    },
+                    {
+                        "id":  "cmmazwx6s00c4648jz1rycy35",
+                        "metricKey":  "ons_dataset_older-people-economic-activity",
+                        "sourceSlug":  "ons",
+                        "geoType":  "national",
+                        "geoCode":  "UK",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  1,
+                        "unit":  "dataset",
+                        "metadata":  {
+                                         "title":  "Local authority ageing statistics, older people economic activity",
+                                         "licence":  "Open Government Licence v3.0",
+                                         "datasetId":  "older-people-economic-activity",
+                                         "attribution":  "Office for National Statistics",
+                                         "description":  "Indicators included are economic activity and employment rates for those aged 50-64 years, by country, region and local authority. Both economic activity and employment rates are displayed as percenta",
+                                         "releaseFrequency":  "Quarterly but updated on CMD annually",
+                                         "sustainabilityRelevant":  true
+                                     },
+                        "jobRunId":  "c8606218-dcc6-40b6-a07e-7a7a5bc62b5e",
+                        "createdAt":  "2026-03-03T19:23:25.827Z"
+                    },
+                    {
+                        "id":  "cmmazwx6s00c5648j1z4dwwsj",
+                        "metricKey":  "ons_dataset_mid-year-pop-est",
+                        "sourceSlug":  "ons",
+                        "geoType":  "national",
+                        "geoCode":  "UK",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  1,
+                        "unit":  "dataset",
+                        "metadata":  {
+                                         "title":  "Population Estimates for UK, England and Wales, Scotland and Northern Ireland",
+                                         "licence":  "Open Government Licence v3.0",
+                                         "datasetId":  "mid-year-pop-est",
+                                         "attribution":  "Office for National Statistics",
+                                         "description":  "Estimates of the usual resident population for the UK as at 30 June of the reference year. Provided by administrative area, single year of age and sex.",
+                                         "unitOfMeasure":  "Number of people",
+                                         "releaseFrequency":  "Annually",
+                                         "sustainabilityRelevant":  true
+                                     },
+                        "jobRunId":  "c8606218-dcc6-40b6-a07e-7a7a5bc62b5e",
+                        "createdAt":  "2026-03-03T19:23:25.827Z"
+                    },
+                    {
+                        "id":  "cmmazwx6s00c6648j6tuqio0x",
+                        "metricKey":  "ons_dataset_labour-market",
+                        "sourceSlug":  "ons",
+                        "geoType":  "national",
+                        "geoCode":  "UK",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  1,
+                        "unit":  "dataset",
+                        "metadata":  {
+                                         "title":  "UK Labour Market",
+                                         "licence":  "Open Government Licence v3.0",
+                                         "datasetId":  "labour-market",
+                                         "attribution":  "Office for National Statistics",
+                                         "description":  "The LFS is a data source compiled from a survey of the UK population. It uses internationally recognised definitions of employment, unemployment and economic activity. It also captures other personal ",
+                                         "releaseFrequency":  " ",
+                                         "sustainabilityRelevant":  true
+                                     },
+                        "jobRunId":  "c8606218-dcc6-40b6-a07e-7a7a5bc62b5e",
+                        "createdAt":  "2026-03-03T19:23:25.827Z"
+                    },
+                    {
+                        "id":  "cmmazwx6s00c7648jr06qz0nq",
+                        "metricKey":  "ons_dataset_index-private-housing-rental-prices",
+                        "sourceSlug":  "ons",
+                        "geoType":  "national",
+                        "geoCode":  "UK",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  1,
+                        "unit":  "dataset",
+                        "metadata":  {
+                                         "title":  "Index of Private Housing Rental Prices",
+                                         "licence":  "Open Government Licence v3.0",
+                                         "datasetId":  "index-private-housing-rental-prices",
+                                         "attribution":  "Office for National Statistics",
+                                         "description":  "An experimental price index tracking the prices paid for renting property from private landlords in the United Kingdom",
+                                         "releaseFrequency":  "Monthly",
+                                         "sustainabilityRelevant":  true
+                                     },
+                        "jobRunId":  "c8606218-dcc6-40b6-a07e-7a7a5bc62b5e",
+                        "createdAt":  "2026-03-03T19:23:25.827Z"
+                    },
+                    {
+                        "id":  "cmmazwx6s00c8648jnt2rhg6x",
+                        "metricKey":  "ons_dataset_house-prices-local-authority",
+                        "sourceSlug":  "ons",
+                        "geoType":  "national",
+                        "geoCode":  "UK",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  1,
+                        "unit":  "dataset",
+                        "metadata":  {
+                                         "title":  "House price statistics for small areas in England and Wales",
+                                         "licence":  "Open Government Licence v3.0",
+                                         "datasetId":  "house-prices-local-authority",
+                                         "attribution":  "Office for National Statistics",
+                                         "description":  "Summary statistics for housing transactions by local authority in England and Wales, on an annual basis, updated quarterly using HM Land Registry Price Paid Data. Select values from the Year and Month",
+                                         "releaseFrequency":  "Quarterly",
+                                         "sustainabilityRelevant":  true
+                                     },
+                        "jobRunId":  "c8606218-dcc6-40b6-a07e-7a7a5bc62b5e",
+                        "createdAt":  "2026-03-03T19:23:25.827Z"
+                    },
+                    {
+                        "id":  "cmmazwx6s00c9648jlwno0zb6",
+                        "metricKey":  "ons_dataset_health-accounts",
+                        "sourceSlug":  "ons",
+                        "geoType":  "national",
+                        "geoCode":  "UK",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  1,
+                        "unit":  "dataset",
+                        "metadata":  {
+                                         "title":  "Expenditure on healthcare: UK Health Accounts",
+                                         "licence":  "Open Government Licence v3.0",
+                                         "datasetId":  "health-accounts",
+                                         "attribution":  "Office for National Statistics",
+                                         "description":  "Healthcare expenditure statistics, produced to the international definitions of the System of Health Accounts 2011.\n\nSubcategories may not sum to aggregates due to rounding.",
+                                         "releaseFrequency":  "Annual",
+                                         "sustainabilityRelevant":  true
+                                     },
+                        "jobRunId":  "c8606218-dcc6-40b6-a07e-7a7a5bc62b5e",
+                        "createdAt":  "2026-03-03T19:23:25.827Z"
+                    },
+                    {
+                        "id":  "cmmazwx6s00ca648j0trfen3k",
+                        "metricKey":  "ons_dataset_generational-income",
+                        "sourceSlug":  "ons",
+                        "geoType":  "national",
+                        "geoCode":  "UK",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  1,
+                        "unit":  "dataset",
+                        "metadata":  {
+                                         "title":  "Generational income: The effects of taxes and benefits",
+                                         "licence":  "Open Government Licence v3.0",
+                                         "datasetId":  "generational-income",
+                                         "attribution":  "Office for National Statistics",
+                                         "description":  "The effects of direct and indirect taxation and benefits received in cash or kind on household income, across the generations and by age.\n\nThis data is estimated by combining multiple years of the Liv",
+                                         "unitOfMeasure":  "Â£ (Mean average amount)",
+                                         "releaseFrequency":  "Annual",
+                                         "sustainabilityRelevant":  true
+                                     },
+                        "jobRunId":  "c8606218-dcc6-40b6-a07e-7a7a5bc62b5e",
+                        "createdAt":  "2026-03-03T19:23:25.827Z"
+                    },
+                    {
+                        "id":  "cmmazwx6s00cb648jo9nmnm7x",
+                        "metricKey":  "ons_dataset_gdp-to-four-decimal-places",
+                        "sourceSlug":  "ons",
+                        "geoType":  "national",
+                        "geoCode":  "UK",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  1,
+                        "unit":  "dataset",
+                        "metadata":  {
+                                         "title":  "GDP monthly estimate (incorporating the Index of Services and Index of Production)",
+                                         "licence":  "Open Government Licence v3.0",
+                                         "datasetId":  "gdp-to-four-decimal-places",
+                                         "attribution":  "Office for National Statistics",
+                                         "description":  "Gross domestic product (GDP) measures the value of goods and services produced in the UK. It estimates the size of and growth in the economy. This dataset also contains the Index of Services (monthly ",
+                                         "unitOfMeasure":  "Index. Seasonally adjusted 2016=100",
+                                         "releaseFrequency":  "Monthly",
+                                         "sustainabilityRelevant":  true
+                                     },
+                        "jobRunId":  "c8606218-dcc6-40b6-a07e-7a7a5bc62b5e",
+                        "createdAt":  "2026-03-03T19:23:25.827Z"
+                    },
+                    {
+                        "id":  "cmmazwx6s00cc648jvhb0v9z5",
+                        "metricKey":  "ons_dataset_cpih01",
+                        "sourceSlug":  "ons",
+                        "geoType":  "national",
+                        "geoCode":  "UK",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  1,
+                        "unit":  "dataset",
+                        "metadata":  {
+                                         "title":  "Consumer Prices Index including owner occupiers\u0027 housing costs (CPIH)",
+                                         "licence":  "Open Government Licence v3.0",
+                                         "datasetId":  "cpih01",
+                                         "attribution":  "Office for National Statistics",
+                                         "description":  "CPIH is the most comprehensive measure of inflation. It extends CPI to include a measure of the costs associated with owning, maintaining and living in one\u0027s own home, known as owner occupiers\u0027 housin",
+                                         "unitOfMeasure":  "Index: 2015=100",
+                                         "releaseFrequency":  "Monthly",
+                                         "sustainabilityRelevant":  true
+                                     },
+                        "jobRunId":  "c8606218-dcc6-40b6-a07e-7a7a5bc62b5e",
+                        "createdAt":  "2026-03-03T19:23:25.827Z"
+                    },
+                    {
+                        "id":  "cmmazwx6s00cd648jxg1wqbeo",
+                        "metricKey":  "ons_dataset_childrens-wellbeing",
+                        "sourceSlug":  "ons",
+                        "geoType":  "national",
+                        "geoCode":  "UK",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  1,
+                        "unit":  "dataset",
+                        "metadata":  {
+                                         "title":  "Children\u0027s Well-being Measures",
+                                         "licence":  "Open Government Licence v3.0",
+                                         "datasetId":  "childrens-wellbeing",
+                                         "attribution":  "Office for National Statistics",
+                                         "description":  "How children aged 0 to 15 years in the UK are coping in a range of areas that matter to their quality of life, reflecting the circumstances of their lives and their own perspectives.\n\nThis is a subset",
+                                         "releaseFrequency":  "To be announced",
+                                         "sustainabilityRelevant":  true
+                                     },
+                        "jobRunId":  "c8606218-dcc6-40b6-a07e-7a7a5bc62b5e",
+                        "createdAt":  "2026-03-03T19:23:25.827Z"
+                    },
+                    {
+                        "id":  "cmmazwx6s00ce648j7lbmgzqf",
+                        "metricKey":  "ons_dataset_ageing-population-projections",
+                        "sourceSlug":  "ons",
+                        "geoType":  "national",
+                        "geoCode":  "UK",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  1,
+                        "unit":  "dataset",
+                        "metadata":  {
+                                         "title":  "Local authority ageing statistics, population projections for older people",
+                                         "licence":  "Open Government Licence v3.0",
+                                         "datasetId":  "ageing-population-projections",
+                                         "attribution":  "Office for National Statistics",
+                                         "description":  "Projected indicators included are derived from the published 2018-based subnational population projections for England, Wales, Scotland and Northern Ireland up to the year 2043. The indicators are the",
+                                         "releaseFrequency":  "Biennial",
+                                         "sustainabilityRelevant":  true
+                                     },
+                        "jobRunId":  "c8606218-dcc6-40b6-a07e-7a7a5bc62b5e",
+                        "createdAt":  "2026-03-03T19:23:25.827Z"
+                    },
+                    {
+                        "id":  "cmmazwx6s00cf648jblt0uk6a",
+                        "metricKey":  "ons_dataset_ageing-population-estimates",
+                        "sourceSlug":  "ons",
+                        "geoType":  "national",
+                        "geoCode":  "UK",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  1,
+                        "unit":  "dataset",
+                        "metadata":  {
+                                         "title":  "Local authority ageing statistics, based on annual mid-year population estimates",
+                                         "licence":  "Open Government Licence v3.0",
+                                         "datasetId":  "ageing-population-estimates",
+                                         "attribution":  "Office for National Statistics",
+                                         "description":  "Indicators included have been derived from the published 2019 mid-year population estimates for the UK, England, Wales, Scotland and Northern Ireland. These are the number of persons and percentage of",
+                                         "releaseFrequency":  "Annual",
+                                         "sustainabilityRelevant":  true
+                                     },
+                        "jobRunId":  "c8606218-dcc6-40b6-a07e-7a7a5bc62b5e",
+                        "createdAt":  "2026-03-03T19:23:25.827Z"
+                    },
+                    {
+                        "id":  "cmmazwx6s00cg648jueautz8g",
+                        "metricKey":  "ons_sustainability_datasets",
+                        "sourceSlug":  "ons",
+                        "geoType":  "national",
+                        "geoCode":  "UK",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  20,
+                        "unit":  "datasets",
+                        "metadata":  {
+                                         "licence":  "Open Government Licence v3.0",
+                                         "keywords":  [
+                                                          "emission",
+                                                          "energy",
+                                                          "environment",
+                                                          "waste",
+                                                          "transport",
+                                                          "population",
+                                                          "well-being",
+                                                          "wellbeing",
+                                                          "health",
+                                                          "housing",
+                                                          "climate"
+                                                      ],
+                                         "attribution":  "Office for National Statistics"
+                                     },
+                        "jobRunId":  "c8606218-dcc6-40b6-a07e-7a7a5bc62b5e",
+                        "createdAt":  "2026-03-03T19:23:25.827Z"
+                    },
+                    {
+                        "id":  "cmmazx41e00cj648jkdzcjn0e",
+                        "metricKey":  "neso_energy_datasets",
+                        "sourceSlug":  "neso-ckan",
+                        "geoType":  "national",
+                        "geoCode":  "GB",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  44,
+                        "unit":  "datasets",
+                        "metadata":  {
+                                         "attribution":  "National Energy System Operator",
+                                         "searchQuery":  "demand generation electricity",
+                                         "datastoreResourceId":  "41fb4ca1-7b59-4fce-b480-b46682f346c9",
+                                         "datastoreDatasetTitle":  "Regional breakdown of FES data (Electricity)"
+                                     },
+                        "jobRunId":  "a33da595-f7b1-43d7-b3f5-7dfeb38b8607",
+                        "createdAt":  "2026-03-03T19:23:34.706Z"
+                    },
+                    {
+                        "id":  "cmmazx41e00ck648j7djvjddj",
+                        "metricKey":  "neso_datastore_records",
+                        "sourceSlug":  "neso-ckan",
+                        "geoType":  "national",
+                        "geoCode":  "GB",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  250,
+                        "unit":  "records",
+                        "metadata":  {
+                                         "resourceId":  "41fb4ca1-7b59-4fce-b480-b46682f346c9",
+                                         "attribution":  "National Energy System Operator",
+                                         "datasetTitle":  "Regional breakdown of FES data (Electricity)",
+                                         "sampleFields":  [
+                                                              "_id(int)",
+                                                              "GSP ID(text)",
+                                                              "GSP Group(text)",
+                                                              "Minor FLOP(text)",
+                                                              "Name(text)",
+                                                              "Latitude(numeric)",
+                                                              "Longitude(numeric)",
+                                                              "Comments(text)"
+                                                          ]
+                                     },
+                        "jobRunId":  "a33da595-f7b1-43d7-b3f5-7dfeb38b8607",
+                        "createdAt":  "2026-03-03T19:23:34.706Z"
+                    },
+                    {
+                        "id":  "cmmazx4k000d7648jbz7pkjq2",
+                        "metricKey":  "ev_charger_count",
+                        "sourceSlug":  "openchargemap",
+                        "geoType":  "council",
+                        "geoCode":  "S12000036",
+                        "periodStart":  "2026-03-02T23:00:00.000Z",
+                        "periodEnd":  "2026-03-03T22:59:59.000Z",
+                        "value":  50,
+                        "unit":  "stations",
+                        "metadata":  {
+                                         "center":  "Edinburgh",
+                                         "licence":  "CC BY-SA",
+                                         "attribution":  "OpenChargeMap",
+                                         "searchRadius":  "25km"
+                                     },
+                        "jobRunId":  "aba571c7-0af0-47d9-b1d5-c55701861d23",
+                        "createdAt":  "2026-03-03T19:23:35.373Z"
+                    }
+                ],
+    "filters":  {
+                    "metricKeys":  [
+                                       "carbon_intensity_forecast",
+                                       "emissions_datasets_found",
+                                       "ev_charger_count",
+                                       "ev_charger_station",
+                                       "generation_mix_biomass",
+                                       "generation_mix_gas",
+                                       "generation_mix_imports",
+                                       "generation_mix_nuclear",
+                                       "generation_mix_wind",
+                                       "neso_dataset_2-14-days-ahead-national-demand-forecast",
+                                       "neso_dataset_2-day-ahead-demand-forecast",
+                                       "neso_dataset_future-energy-scenario-electricity-supply-data-tab",
+                                       "neso_dataset_historic-demand-data",
+                                       "neso_dataset_historic-generation-mix",
+                                       "neso_dataset_index-linked-contract-volume",
+                                       "neso_dataset_long-term-2-52-weeks-ahead-national-demand-forecas",
+                                       "neso_dataset_regional-breakdown-of-fes-data-electricity",
+                                       "neso_dataset_tresp-demand-pathways",
+                                       "neso_dataset_tresp-generation-pathways",
+                                       "neso_datasets_found",
+                                       "neso_datastore_records",
+                                       "neso_energy_datasets",
+                                       "neso_latitude",
+                                       "neso_longitude",
+                                       "ons_dataset_ageing-population-estimates",
+                                       "ons_dataset_ageing-population-projections",
+                                       "ons_dataset_childrens-wellbeing",
+                                       "ons_dataset_cpih01",
+                                       "ons_dataset_gdp-to-four-decimal-places",
+                                       "ons_dataset_generational-income",
+                                       "ons_dataset_health-accounts",
+                                       "ons_dataset_house-prices-local-authority",
+                                       "ons_dataset_index-private-housing-rental-prices",
+                                       "ons_dataset_labour-market",
+                                       "ons_dataset_mid-year-pop-est",
+                                       "ons_dataset_older-people-economic-activity",
+                                       "ons_dataset_older-people-sex-ratios",
+                                       "ons_dataset_projections-older-people-sex-ratios",
+                                       "ons_dataset_sexual-orientation-by-age-and-sex",
+                                       "ons_dataset_sexual-orientation-by-region",
+                                       "ons_dataset_trade",
+                                       "ons_dataset_traffic_camera_activity",
+                                       "ons_dataset_uk_business_by_enterprises_and_local_units",
+                                       "ons_dataset_uk_spending_on_cards",
+                                       "ons_dataset_weekly-deaths-health-board",
+                                       "ons_dataset_weekly-deaths-local-authority",
+                                       "ons_dataset_weekly_deaths_age_sex",
+                                       "ons_dataset_weekly_deaths_health_board",
+                                       "ons_dataset_weekly_deaths_local_authority",
+                                       "ons_dataset_weekly_deaths_region",
+                                       "ons_dataset_wellbeing-local-authority",
+                                       "ons_dataset_wellbeing-quarterly",
+                                       "ons_dataset_wellbeing_local_authority",
+                                       "ons_dataset_wellbeing_quarterly",
+                                       "ons_datasets_available",
+                                       "ons_sustainability_datasets",
+                                       "ons_total_datasets",
+                                       "osm_allotments_count",
+                                       "osm_cycleway_count",
+                                       "osm_forest_count",
+                                       "osm_garden_count",
+                                       "osm_greenspace_count",
+                                       "osm_greenspace_total",
+                                       "osm_named_greenspace",
+                                       "osm_nature_reserve_count",
+                                       "osm_park_count",
+                                       "protected_area_dataset",
+                                       "protected_areas_datasets_count",
+                                       "scot_stats_dataset",
+                                       "scot_stats_datasets_count",
+                                       "scottish_air_stations_count",
+                                       "sepa_waste_dataset",
+                                       "sepa_waste_datasets_count",
+                                       "sepa_waste_datasets_found"
+                                   ],
+                    "geoCodes":  [
+                                     {
+                                         "geoCode":  "GB",
+                                         "geoType":  "national"
+                                     },
+                                     {
+                                         "geoCode":  "north-scotland",
+                                         "geoType":  "region"
+                                     },
+                                     {
+                                         "geoCode":  "ocm_105061",
+                                         "geoType":  "point"
+                                     },
+                                     {
+                                         "geoCode":  "ocm_131036",
+                                         "geoType":  "point"
+                                     },
+                                     {
+                                         "geoCode":  "ocm_146178",
+                                         "geoType":  "point"
+                                     },
+                                     {
+                                         "geoCode":  "ocm_146204",
+                                         "geoType":  "point"
+                                     },
+                                     {
+                                         "geoCode":  "ocm_16520",
+                                         "geoType":  "point"
+                                     },
+                                     {
+                                         "geoCode":  "ocm_194241",
+                                         "geoType":  "point"
+                                     },
+                                     {
+                                         "geoCode":  "ocm_195263",
+                                         "geoType":  "point"
+                                     },
+                                     {
+                                         "geoCode":  "ocm_195264",
+                                         "geoType":  "point"
+                                     },
+                                     {
+                                         "geoCode":  "ocm_195299",
+                                         "geoType":  "point"
+                                     },
+                                     {
+                                         "geoCode":  "ocm_255859",
+                                         "geoType":  "point"
+                                     },
+                                     {
+                                         "geoCode":  "ocm_287516",
+                                         "geoType":  "point"
+                                     },
+                                     {
+                                         "geoCode":  "ocm_287518",
+                                         "geoType":  "point"
+                                     },
+                                     {
+                                         "geoCode":  "ocm_287525",
+                                         "geoType":  "point"
+                                     },
+                                     {
+                                         "geoCode":  "ocm_47608",
+                                         "geoType":  "point"
+                                     },
+                                     {
+                                         "geoCode":  "ocm_48321",
+                                         "geoType":  "point"
+                                     },
+                                     {
+                                         "geoCode":  "ocm_5160",
+                                         "geoType":  "point"
+                                     },
+                                     {
+                                         "geoCode":  "ocm_91957",
+                                         "geoType":  "point"
+                                     },
+                                     {
+                                         "geoCode":  "ocm_93601",
+                                         "geoType":  "point"
+                                     },
+                                     {
+                                         "geoCode":  "ocm_95216",
+                                         "geoType":  "point"
+                                     },
+                                     {
+                                         "geoCode":  "ocm_9661",
+                                         "geoType":  "point"
+                                     },
+                                     {
+                                         "geoCode":  "S12000008",
+                                         "geoType":  "council"
+                                     },
+                                     {
+                                         "geoCode":  "S12000030",
+                                         "geoType":  "council"
+                                     },
+                                     {
+                                         "geoCode":  "S12000033",
+                                         "geoType":  "council"
+                                     },
+                                     {
+                                         "geoCode":  "S12000036",
+                                         "geoType":  "council"
+                                     },
+                                     {
+                                         "geoCode":  "S12000047",
+                                         "geoType":  "council"
+                                     },
+                                     {
+                                         "geoCode":  "S12000049",
+                                         "geoType":  "council"
+                                     },
+                                     {
+                                         "geoCode":  "scotland",
+                                         "geoType":  "region"
+                                     },
+                                     {
+                                         "geoCode":  "scotland",
+                                         "geoType":  "national"
+                                     },
+                                     {
+                                         "geoCode":  "south-scotland",
+                                         "geoType":  "region"
+                                     },
+                                     {
+                                         "geoCode":  "UK",
+                                         "geoType":  "national"
+                                     }
+                                 ]
+                }
+}
