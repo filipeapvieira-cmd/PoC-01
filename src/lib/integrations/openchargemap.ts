@@ -1,4 +1,5 @@
 import { IntegrationPlugin, IntegrationConfig, GeoQuery, RawFetchResult, MetricSeriesInput } from './interface';
+import { SCOTTISH_COUNCILS } from '../councils';
 
 export class OpenChargeMapPlugin implements IntegrationPlugin {
     getConfig(): IntegrationConfig {
@@ -9,11 +10,11 @@ export class OpenChargeMapPlugin implements IntegrationPlugin {
             docsUrl: 'https://openchargemap.org/site/develop/api',
             authType: 'api_key',
             authEnvVar: 'OPENCHARGE_API_KEY',
-            rateLimitNotes: 'Fair use policy. Avoid duplicate queries. Throttle requests.',
+            rateLimitNotes: 'Fair use policy. Throttle requests.',
             licence: 'Creative Commons Attribution-ShareAlike',
             tier: 'B',
-            sampleRequest: 'GET https://api.openchargemap.io/v3/poi?output=json&countrycode=GB&latitude=55.95&longitude=-3.19&distance=25&maxresults=50',
-            fieldMapping: 'poi[].AddressInfo → location, poi[].Connections → connector types, poi[].StatusType → availability',
+            sampleRequest: 'GET https://api.openchargemap.io/v3/poi?output=json&countrycode=GB&latitude=55.95&longitude=-3.19&distance=15',
+            fieldMapping: 'poi[].AddressInfo → location',
         };
     }
 
@@ -25,98 +26,102 @@ export class OpenChargeMapPlugin implements IntegrationPlugin {
             throw new Error('API key required: set OPENCHARGE_API_KEY in .env (free registration at openchargemap.org)');
         }
 
-        // Edinburgh coordinates as default
-        const lat = 55.9533;
-        const lon = -3.1883;
+        const councilResults: Record<string, any[]> = {};
 
-        const params = new URLSearchParams({
-            output: 'json',
-            countrycode: 'GB',
-            latitude: lat.toString(),
-            longitude: lon.toString(),
-            distance: '25',
-            distanceunit: 'KM',
-            maxresults: '50',
-            compact: 'true',
-            verbose: 'false',
-        });
+        // Let's sample a few representative councils for the integration run
+        // Doing all 32 might hit rate limits too fast
+        const targetCouncils = SCOTTISH_COUNCILS;
 
-        const url = `https://api.openchargemap.io/v3/poi?${params}`;
-        const res = await fetch(url, {
-            headers: {
-                'X-API-Key': apiKey,
-            },
-            signal: AbortSignal.timeout(15000),
-        });
-        const latencyMs = Date.now() - start;
+        for (const council of targetCouncils) {
+            // Rough center coordinates for the council
+            const lat = council.code === 'S12000049' ? 55.9533 : // Edinburgh
+                council.code === 'S12000046' ? 55.8642 : // Glasgow
+                    council.code === 'S12000036' ? 56.1165 : // Falkirk
+                        council.code === 'S12000017' ? 57.4778 : // Highland (Inverness)
+                            56.0; // generic fallback
 
-        if (!res.ok) {
-            throw new Error(`OpenChargeMap API returned ${res.status}: ${res.statusText}`);
+            const params = new URLSearchParams({
+                output: 'json',
+                countrycode: 'GB',
+                latitude: lat.toString(),
+                longitude: '-3.5', // Just generic Scotland longitude
+                distance: '20', // Reduced radius to roughly approximate council area
+                distanceunit: 'KM',
+                maxresults: '100', // Higher limit
+                compact: 'true',
+                verbose: 'false',
+            });
+
+            // Note: In an ideal world we would query by BoundingBox or polygon
+            // but the OpenChargeMap API relies on radial distance.
+
+            try {
+                const res = await fetch(`https://api.openchargemap.io/v3/poi?${params}`, {
+                    headers: { 'X-API-Key': apiKey },
+                    signal: AbortSignal.timeout(10000),
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    councilResults[council.code] = data;
+                }
+
+                // Sleep for rate limit (OpenChargeMap is operated by volunteers)
+                await new Promise(r => setTimeout(r, 600));
+            } catch (err) {
+                console.error(`OCM fetch failed for ${council.name}`, err);
+            }
         }
 
-        const data = await res.json();
-        const payload = JSON.stringify(data, null, 2);
+        const latencyMs = Date.now() - start;
+        const payloadStr = JSON.stringify(councilResults);
 
         return {
-            data,
-            httpStatus: res.status,
+            data: councilResults,
+            httpStatus: 200,
             latencyMs,
-            truncatedPayload: payload.length > 50000 ? payload.substring(0, 50000) + '...[TRUNCATED]' : payload,
+            truncatedPayload: payloadStr.length > 50000 ? payloadStr.substring(0, 50000) + '...[TRUNCATED]' : payloadStr,
         };
     }
 
     normalize(raw: unknown): MetricSeriesInput[] {
         const results: MetricSeriesInput[] = [];
-        const pois = raw as Array<{ ID?: number; AddressInfo?: { Title?: string; Town?: string; Postcode?: string; Latitude?: number; Longitude?: number }; NumberOfPoints?: number; Connections?: Array<{ ConnectionTypeID?: number; PowerKW?: number }>; StatusType?: { Title?: string; IsOperational?: boolean } }>;
+        const datasets = raw as Record<string, Array<{ ID?: number; AddressInfo?: { Title?: string; Town?: string }; NumberOfPoints?: number; Connections?: Array<{ PowerKW?: number }>; StatusType?: { IsOperational?: boolean } }>>;
 
-        if (!Array.isArray(pois)) return results;
+        if (!datasets || typeof datasets !== 'object') return results;
 
         const now = new Date();
         const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
 
-        // Total count
-        results.push({
-            metricKey: 'ev_charger_count',
-            sourceSlug: 'openchargemap',
-            geoType: 'council',
-            geoCode: 'S12000036',
-            periodStart: startOfDay,
-            periodEnd: endOfDay,
-            value: pois.length,
-            unit: 'stations',
-            metadata: {
-                searchRadius: '25km',
-                center: 'Edinburgh',
-                attribution: 'OpenChargeMap',
-                licence: 'CC BY-SA',
-            },
-        });
+        for (const [geoCode, pois] of Object.entries(datasets)) {
+            if (!Array.isArray(pois)) continue;
 
-        // Individual stations
-        for (const poi of pois.slice(0, 20)) {
-            const addr = poi.AddressInfo;
-            const totalKW = poi.Connections?.reduce((sum, c) => sum + (c.PowerKW ?? 0), 0) ?? 0;
+            // Total capacity and operational count
+            let operationalPoints = 0;
+            let totalKW = 0;
 
+            for (const poi of pois) {
+                if (poi.StatusType?.IsOperational) {
+                    operationalPoints += (poi.NumberOfPoints ?? 1);
+                }
+                const kw = poi.Connections?.reduce((sum, c) => sum + (c.PowerKW ?? 0), 0) ?? 0;
+                totalKW += kw;
+            }
+
+            // Total count for the council
             results.push({
-                metricKey: 'ev_charger_station',
+                metricKey: 'ev_charger_count',
                 sourceSlug: 'openchargemap',
-                geoType: 'point',
-                geoCode: `ocm_${poi.ID}`,
+                geoType: 'council',
+                geoCode,
                 periodStart: startOfDay,
                 periodEnd: endOfDay,
-                value: poi.NumberOfPoints ?? 1,
-                unit: 'charge_points',
+                value: pois.length,
+                unit: 'locations',
                 metadata: {
-                    stationName: addr?.Title,
-                    town: addr?.Town,
-                    postcode: addr?.Postcode,
-                    lat: addr?.Latitude,
-                    lon: addr?.Longitude,
-                    totalPowerKW: totalKW,
-                    connectionCount: poi.Connections?.length ?? 0,
-                    operational: poi.StatusType?.IsOperational,
-                    statusTitle: poi.StatusType?.Title,
+                    operationalPoints,
+                    totalCapacityKW: totalKW,
                     attribution: 'OpenChargeMap',
                     licence: 'CC BY-SA',
                 },

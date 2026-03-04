@@ -18,7 +18,7 @@ console.table(r1.rows);
 
 // What's the ingestion log status?
 const r2 = await pool.query(`
-  SELECT "sourceSlug", "lastRunAt", "lastStatus", "lastLatencyMs"
+  SELECT "slug", "lastRunAt", "lastStatus", "lastLatencyMs"
   FROM "SourceConfig"
   ORDER BY "lastRunAt" DESC NULLS LAST
   LIMIT 10

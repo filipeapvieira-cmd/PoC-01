@@ -19,30 +19,24 @@ export class ScottishAirQualityPlugin implements IntegrationPlugin {
     async fetchSample(geo: GeoQuery): Promise<RawFetchResult> {
         const start = Date.now();
 
-        // Step 1: Get all stations
-        const stationUrl = 'https://uk-air.defra.gov.uk/sos-ukair/api/v1/stations?expanded=true';
-        const stationRes = await fetch(stationUrl, {
+        // Step 1: Get all timeseries
+        const tsUrl = 'https://uk-air.defra.gov.uk/sos-ukair/api/v1/timeseries?expanded=true';
+        const tsRes = await fetch(tsUrl, {
             headers: { 'Accept': 'application/json' },
-            signal: AbortSignal.timeout(15000),
+            signal: AbortSignal.timeout(20000),
         });
         const latencyMs = Date.now() - start;
 
-        if (!stationRes.ok) {
-            throw new Error(`UK AIR API returned ${stationRes.status}: ${stationRes.statusText}`);
+        if (!tsRes.ok) {
+            throw new Error(`UK AIR API returned ${tsRes.status}: ${tsRes.statusText}`);
         }
 
-        const allStations = await stationRes.json() as Array<{
-            id?: number;
-            properties?: {
-                id?: number;
-                label?: string;
-                timeseries?: Record<string, {
-                    phenomenon?: { label?: string };
-                    uom?: string;
-                    lastValue?: { timestamp?: number; value?: number };
-                    station?: { properties?: { label?: string } };
-                }>;
-            };
+        const allTs = await tsRes.json() as Array<{
+            id?: string;
+            uom?: string;
+            station?: { properties?: { id?: number; label?: string } };
+            lastValue?: { timestamp?: number; value?: number };
+            parameters?: { phenomenon?: { id?: string; label?: string } };
         }>;
 
         // Filter for Scottish stations
@@ -53,37 +47,48 @@ export class ScottishAirQualityPlugin implements IntegrationPlugin {
             'paisley', 'motherwell', 'hamilton', 'kirkcaldy', 'dunfermline', 'livingston',
         ];
 
-        const scottishStations = allStations.filter(s => {
-            const label = (s.properties?.label ?? '').toLowerCase();
+        const scottishTs = allTs.filter(ts => {
+            const label = (ts.station?.properties?.label ?? '').toLowerCase();
             return scottishKeywords.some(k => label.includes(k));
         });
 
-        // Step 2: For each Scottish station, extract latest values from timeseries
-        const stationData = scottishStations.map(station => {
-            const timeseries = station.properties?.timeseries ?? {};
-            const measurements: Array<{ phenomenon: string; value: number; unit: string; timestamp: string; timeseriesId: string }> = [];
+        // Group by station
+        const stationMap = new Map<number, { stationId: number; stationName: string; measurements: any[] }>();
 
-            for (const [tsId, ts] of Object.entries(timeseries)) {
-                if (ts.lastValue?.value != null && ts.lastValue?.timestamp != null) {
-                    measurements.push({
-                        phenomenon: ts.phenomenon?.label ?? 'unknown',
-                        value: ts.lastValue.value,
-                        unit: ts.uom ?? 'µg/m³',
-                        timestamp: new Date(ts.lastValue.timestamp).toISOString(),
-                        timeseriesId: tsId,
-                    });
-                }
+        const phenomenonIdMap: Record<string, string> = {
+            '5': 'PM10',
+            '6001': 'PM2.5',
+            '8': 'NO2',
+            '1': 'SO2',
+            '10': 'CO',
+            '7': 'O3'
+        };
+
+        for (const ts of scottishTs) {
+            const stId = ts.station?.properties?.id;
+            const stName = ts.station?.properties?.label;
+            if (!stId || !stName) continue;
+
+            if (!stationMap.has(stId)) {
+                stationMap.set(stId, { stationId: stId, stationName: stName, measurements: [] });
             }
 
-            return {
-                stationId: station.id,
-                stationName: station.properties?.label ?? `Station ${station.id}`,
-                measurements,
-            };
-        });
+            if (ts.lastValue?.value != null && ts.lastValue?.timestamp != null) {
+                const pId = ts.parameters?.phenomenon?.id ?? 'unknown';
+                stationMap.get(stId)!.measurements.push({
+                    phenomenon: phenomenonIdMap[pId] ?? `id_${pId}`,
+                    value: ts.lastValue.value,
+                    unit: ts.uom ?? 'unknown',
+                    timestamp: new Date(ts.lastValue.timestamp).toISOString(),
+                    timeseriesId: ts.id ?? 'unknown',
+                });
+            }
+        }
+
+        const stationData = Array.from(stationMap.values());
 
         const data = {
-            totalStationsUK: allStations.length,
+            totalTimeseriesUK: allTs.length,
             scottishStations: stationData,
             totalScottishStations: stationData.length,
             totalMeasurements: stationData.reduce((sum, s) => sum + s.measurements.length, 0),
@@ -93,7 +98,7 @@ export class ScottishAirQualityPlugin implements IntegrationPlugin {
 
         return {
             data,
-            httpStatus: stationRes.status,
+            httpStatus: tsRes.status,
             latencyMs,
             truncatedPayload: payload.length > 50000 ? payload.substring(0, 50000) + '...[TRUNCATED]' : payload,
         };

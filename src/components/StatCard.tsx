@@ -9,9 +9,10 @@ interface StatCardProps {
     trend?: 'up' | 'down' | 'neutral';
     trendValue?: string;
     color?: string;
+    lastUpdated?: string | null;
 }
 
-export function StatCard({ title, value, unit, icon: Icon, trend, trendValue, color = 'var(--accent-green)' }: StatCardProps) {
+export function StatCard({ title, value, unit, icon: Icon, trend, trendValue, color = 'var(--accent-green)', lastUpdated }: StatCardProps) {
     const isNull = value === null || value === undefined;
 
     return (
@@ -79,6 +80,21 @@ export function StatCard({ title, value, unit, icon: Icon, trend, trendValue, co
                     }}>
                         <span>{trend === 'up' ? '↑' : trend === 'down' ? '↓' : '→'}</span>
                         <span>{trendValue}</span>
+                    </div>
+                )}
+
+                {lastUpdated && (
+                    <div style={{
+                        marginTop: 'auto',
+                        paddingTop: '0.75rem',
+                        fontSize: '0.7rem',
+                        color: 'var(--text-muted)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.35rem'
+                    }}>
+                        <span style={{ display: 'inline-block', width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--accent-blue)', opacity: 0.7 }}></span>
+                        Updated: {new Date(lastUpdated).toLocaleDateString()} {new Date(lastUpdated).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </div>
                 )}
             </div>

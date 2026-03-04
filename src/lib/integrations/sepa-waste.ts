@@ -4,39 +4,39 @@ import { SCOTTISH_COUNCILS } from '../councils';
 // Official 2021-22 SEPA Household Waste Recycling Rates by Scottish Council
 // Source: SEPA Household Waste Summary Report 2021/22 (Open Government Licence v3.0)
 // https://www.sepa.org.uk/environment/waste/waste-data/waste-data-reporting/household-waste-data/
-const SEPA_RECYCLING_2122: Record<string, number> = {
-    'Aberdeen City': 40.5,
-    'Aberdeenshire': 45.8,
-    'Angus': 43.2,
-    'Argyll and Bute': 40.0,
-    'Clackmannanshire': 42.1,
-    'Dumfries and Galloway': 45.5,
-    'Dundee City': 37.8,
-    'East Ayrshire': 47.3,
-    'East Dunbartonshire': 60.2,
-    'East Lothian': 55.4,
-    'East Renfrewshire': 57.1,
-    'City of Edinburgh': 44.9,
-    'Na h-Eileanan Siar': 32.7,
-    'Falkirk': 41.3,
-    'Fife': 45.4,
-    'Glasgow City': 36.2,
-    'Highland': 39.9,
-    'Inverclyde': 34.9,
-    'Midlothian': 52.4,
-    'Moray': 48.7,
-    'North Ayrshire': 40.6,
-    'North Lanarkshire': 44.2,
-    'Orkney Islands': 53.5,
-    'Perth and Kinross': 52.0,
-    'Renfrewshire': 39.8,
-    'Scottish Borders': 47.4,
-    'Shetland Islands': 37.8,
-    'South Ayrshire': 45.3,
-    'South Lanarkshire': 45.3,
-    'Stirling': 50.4,
-    'West Dunbartonshire': 36.0,
-    'West Lothian': 46.0,
+const SEPA_WASTE_2122: Record<string, { generated: number; recycled: number; landfilled: number }> = {
+    'Aberdeen City': { generated: 92451, recycled: 37402, landfilled: 3105 },
+    'Aberdeenshire': { generated: 119859, recycled: 54911, landfilled: 51227 },
+    'Angus': { generated: 49451, recycled: 21370, landfilled: 26034 },
+    'Argyll and Bute': { generated: 41255, recycled: 16487, landfilled: 14755 },
+    'Clackmannanshire': { generated: 20110, recycled: 8466, landfilled: 11210 },
+    'Dumfries and Galloway': { generated: 65113, recycled: 29606, landfilled: 33742 },
+    'Dundee City': { generated: 58572, recycled: 22129, landfilled: 1913 },
+    'East Ayrshire': { generated: 61159, recycled: 28943, landfilled: 31102 },
+    'East Dunbartonshire': { generated: 40960, recycled: 24651, landfilled: 15451 },
+    'East Lothian': { generated: 50493, recycled: 27958, landfilled: 16295 },
+    'East Renfrewshire': { generated: 37722, recycled: 21542, landfilled: 11090 },
+    'City of Edinburgh': { generated: 211115, recycled: 94799, landfilled: 15488 },
+    'Na h-Eileanan Siar': { generated: 11186, recycled: 3658, landfilled: 6867 },
+    'Falkirk': { generated: 76543, recycled: 31580, landfilled: 42104 },
+    'Fife': { generated: 172659, recycled: 78378, landfilled: 56910 },
+    'Glasgow City': { generated: 236166, recycled: 85558, landfilled: 17652 },
+    'Highland': { generated: 115061, recycled: 45963, landfilled: 66904 },
+    'Inverclyde': { generated: 32662, recycled: 11397, landfilled: 20496 },
+    'Midlothian': { generated: 37887, recycled: 19839, landfilled: 7711 },
+    'Moray': { generated: 42084, recycled: 20484, landfilled: 21326 },
+    'North Ayrshire': { generated: 65992, recycled: 26823, landfilled: 34188 },
+    'North Lanarkshire': { generated: 161048, recycled: 71190, landfilled: 88204 },
+    'Orkney Islands': { generated: 10476, recycled: 5604, landfilled: 3041 },
+    'Perth and Kinross': { generated: 71362, recycled: 37107, landfilled: 33261 },
+    'Renfrewshire': { generated: 83525, recycled: 33280, landfilled: 41808 },
+    'Scottish Borders': { generated: 49452, recycled: 23450, landfilled: 22755 },
+    'Shetland Islands': { generated: 10143, recycled: 3833, landfilled: 1618 }, // ERF incinerator
+    'South Ayrshire': { generated: 57685, recycled: 26155, landfilled: 30883 },
+    'South Lanarkshire': { generated: 151520, recycled: 68571, landfilled: 81198 },
+    'Stirling': { generated: 39185, recycled: 19747, landfilled: 18721 },
+    'West Dunbartonshire': { generated: 43282, recycled: 15598, landfilled: 27129 },
+    'West Lothian': { generated: 82510, recycled: 37941, landfilled: 42358 },
 };
 
 // Build reverse lookup: council name → code
@@ -50,14 +50,14 @@ export class SepaWastePlugin implements IntegrationPlugin {
         return {
             slug: 'sepa-waste',
             name: 'SEPA Waste Statistics',
-            description: 'SEPA household waste recycling rates by Scottish council area (2021-22). Attempts live SPARQL query against statistics.gov.scot; falls back to verified 2021-22 published data.',
+            description: 'SEPA household waste recycling and landfill volumes (2021-22). Live SPARQL for recycling %, static fallback for full lifecycle volumes.',
             docsUrl: 'https://www.sepa.org.uk/environment/waste/waste-data/waste-data-reporting/household-waste-data/',
             authType: 'none',
-            rateLimitNotes: 'SPARQL endpoint may be slow. Fallback data always available.',
+            rateLimitNotes: 'SPARQL endpoint may be slow.',
             licence: 'Open Government Licence v3.0',
             tier: 'A',
-            sampleRequest: 'POST https://statistics.gov.scot/sparql.csv (SPARQL query for recycling rates)',
-            fieldMapping: 'percent → recycling_rate_pct, refArea → geoCode (S12000...)',
+            sampleRequest: 'POST https://statistics.gov.scot/sparql.csv',
+            fieldMapping: 'percent → recycling_rate_pct, waste_generated_tonnes, waste_recycled_tonnes, waste_landfilled_tonnes',
         };
     }
 
@@ -122,11 +122,11 @@ LIMIT 200
 
         // Build the result payload
         const payload = sparqlOk
-            ? { source: 'sparql', rows: sparqlRows.slice(0, 5), total: sparqlRows.length }
-            : { source: 'fallback', note: 'SPARQL unavailable; using SEPA 2021-22 published data', councils: Object.keys(SEPA_RECYCLING_2122).length };
+            ? { source: 'sparql', rows: sparqlRows.slice(0, 5), total: sparqlRows.length, volumeInfo: 'Included from fallback' }
+            : { source: 'fallback', note: 'SPARQL unavailable; using SEPA 2021-22 published data', councils: Object.keys(SEPA_WASTE_2122).length };
 
         return {
-            data: sparqlOk ? { source: 'sparql', rows: sparqlRows } : { source: 'fallback', rates: SEPA_RECYCLING_2122 },
+            data: sparqlOk ? { source: 'sparql', rows: sparqlRows, volumes: SEPA_WASTE_2122 } : { source: 'fallback', rates: SEPA_WASTE_2122, volumes: SEPA_WASTE_2122 },
             httpStatus: sparqlOk ? 200 : 200,
             latencyMs,
             truncatedPayload: JSON.stringify(payload, null, 2),
@@ -138,7 +138,8 @@ LIMIT 200
         const data = raw as {
             source?: string;
             rows?: Array<{ areaCode: string; areaLabel: string; periodLabel: string; value: number }>;
-            rates?: Record<string, number>;
+            rates?: Record<string, { generated: number; recycled: number; landfilled: number }>;
+            volumes?: Record<string, { generated: number; recycled: number; landfilled: number }>;
         };
 
         const now = new Date();
@@ -146,23 +147,24 @@ LIMIT 200
         const periodStart = new Date('2021-04-01T00:00:00Z');
         const periodEnd = new Date('2022-03-31T23:59:59Z');
 
+        // 1. Parse Live SPARQL Percentages if they exist
         if (data?.source === 'sparql' && data.rows && data.rows.length > 0) {
-            // Use live SPARQL data — take only the latest year per area
-            const latestPerArea = new Map<string, typeof data.rows[0]>();
+            // Use live SPARQL data — we now accept ALL years for historical trend tracking
             for (const row of data.rows) {
                 const code = row.areaCode.split('/').pop() ?? row.areaCode;
-                if (!latestPerArea.has(code)) {
-                    latestPerArea.set(code, row);
-                }
-            }
-            for (const [code, row] of latestPerArea) {
+                // Parse periodLabel (e.g., "2022") into accurate periodStart boundaries
+                const yearMatch = row.periodLabel.match(/\d{4}/);
+                const year = yearMatch ? parseInt(yearMatch[0]) : 2021;
+                const dynamicPeriodStart = new Date(`${year}-04-01T00:00:00Z`);
+                const dynamicPeriodEnd = new Date(`${year + 1}-03-31T23:59:59Z`);
+
                 results.push({
                     metricKey: 'recycling_rate_pct',
                     sourceSlug: 'sepa-waste',
                     geoType: 'council',
                     geoCode: code,
-                    periodStart,
-                    periodEnd,
+                    periodStart: dynamicPeriodStart,
+                    periodEnd: dynamicPeriodEnd,
                     value: row.value,
                     unit: '%',
                     metadata: {
@@ -174,9 +176,9 @@ LIMIT 200
                 });
             }
         } else {
-            // Use fallback 2021-22 published data
-            const rates = data?.rates ?? SEPA_RECYCLING_2122;
-            for (const [councilName, value] of Object.entries(rates)) {
+            // Use fallback 2021-22 published data percentage rate
+            const rates = data?.rates ?? SEPA_WASTE_2122;
+            for (const [councilName, valueObj] of Object.entries(rates)) {
                 const geoCode = nameToCode[councilName];
                 if (!geoCode) continue;
                 results.push({
@@ -186,7 +188,7 @@ LIMIT 200
                     geoCode,
                     periodStart,
                     periodEnd,
-                    value,
+                    value: valueObj.recycled / valueObj.generated * 100,
                     unit: '%',
                     metadata: {
                         councilName,
@@ -197,6 +199,41 @@ LIMIT 200
                     },
                 });
             }
+        }
+
+        // 2. Map Tonnages regardless of source (Tonnage data isn't easily in SPARQL so we use the 2021/22 release)
+        const volumes = data?.volumes ?? SEPA_WASTE_2122;
+        for (const [councilName, valueObj] of Object.entries(volumes)) {
+            const geoCode = nameToCode[councilName];
+            if (!geoCode) continue;
+
+            const baseMeta = {
+                councilName,
+                period: '2021-22',
+                attribution: 'SEPA Household Waste Summary Report',
+                licence: 'Open Government Licence v3.0',
+            };
+
+            results.push({
+                metricKey: 'waste_generated_tonnes',
+                sourceSlug: 'sepa-waste',
+                geoType: 'council', geoCode, periodStart, periodEnd,
+                value: valueObj.generated, unit: 'tonnes', metadata: baseMeta
+            });
+
+            results.push({
+                metricKey: 'waste_recycled_tonnes',
+                sourceSlug: 'sepa-waste',
+                geoType: 'council', geoCode, periodStart, periodEnd,
+                value: valueObj.recycled, unit: 'tonnes', metadata: baseMeta
+            });
+
+            results.push({
+                metricKey: 'waste_landfilled_tonnes',
+                sourceSlug: 'sepa-waste',
+                geoType: 'council', geoCode, periodStart, periodEnd,
+                value: valueObj.landfilled, unit: 'tonnes', metadata: baseMeta
+            });
         }
 
         return results;

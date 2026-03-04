@@ -11,7 +11,15 @@ export const RANKING_METRICS: Array<{
         { key: 'recycling_rate_pct', label: 'Household Recycling Rate', unit: '%', higherIsBetter: true },
         { key: 'osm_greenspace_total', label: 'Urban Greenspace Features', unit: 'features', higherIsBetter: true },
         { key: 'osm_cycleway_count', label: 'Cycling Routes (OSM)', unit: 'routes', higherIsBetter: true },
+        { key: 'air_quality_pm10', label: 'Air Quality (PM10)', unit: 'µg/m³', higherIsBetter: false },
         { key: 'mean_temperature', label: 'Avg Temperature (7-day)', unit: '°C', higherIsBetter: false },
+        { key: 'electricity_consumption_gwh', label: 'Electricity Consumption', unit: 'GWh', higherIsBetter: false },
+        { key: 'gas_consumption_gwh', label: 'Gas Consumption', unit: 'GWh', higherIsBetter: false },
+        { key: 'waste_generated_tonnes', label: 'Waste Generated', unit: 'tonnes', higherIsBetter: false },
+        { key: 'waste_landfilled_tonnes', label: 'Waste Landfilled', unit: 'tonnes', higherIsBetter: false },
+        { key: 'ev_charger_count', label: 'Public EV Chargers', unit: 'locations', higherIsBetter: true },
+        { key: 'solar_radiation', label: 'Solar Potential (MJ/m²)', unit: 'MJ/m²', higherIsBetter: true },
+        { key: 'max_wind_gust', label: 'Wind Potential (km/h)', unit: 'km/h', higherIsBetter: true },
         { key: 'total_precipitation', label: 'Avg Precipitation (7-day)', unit: 'mm', higherIsBetter: false },
         { key: 'max_wind_gust', label: 'Avg Wind Gust (7-day)', unit: 'km/h', higherIsBetter: false },
     ];
@@ -29,7 +37,32 @@ export async function GET(req: NextRequest) {
 
         let councilValues: Array<{ geoCode: string; value: number }> = [];
 
-        if (isTimeSeries) {
+        if (metricKey.startsWith('air_quality_')) {
+            // Map stations to councils by name heuristic
+            const records = await prisma.metricSeries.findMany({
+                where: { metricKey, sourceSlug: 'scottish-air-quality' },
+                orderBy: { periodStart: 'desc' },
+                distinct: ['geoCode'],
+                select: { value: true, metadata: true },
+            });
+
+            const byCouncil = new Map<string, number[]>();
+            for (const r of records) {
+                const name = String((r.metadata as Record<string, string>)?.stationName || '').toLowerCase();
+                for (const council of SCOTTISH_COUNCILS) {
+                    const bestWords = council.name.toLowerCase().replace('city of ', '').replace(' and ', ' ').split(' ').filter(w => w.length > 2);
+                    if (bestWords.some(w => name.includes(w))) {
+                        if (!byCouncil.has(council.code)) byCouncil.set(council.code, []);
+                        byCouncil.get(council.code)!.push(r.value);
+                    }
+                }
+            }
+
+            councilValues = Array.from(byCouncil.entries()).map(([geoCode, values]) => ({
+                geoCode,
+                value: Math.round((values.reduce((s, v) => s + v, 0) / values.length) * 10) / 10,
+            }));
+        } else if (isTimeSeries) {
             // Aggregate: average of latest 7 records per council
             const records = await prisma.metricSeries.findMany({
                 where: { metricKey },

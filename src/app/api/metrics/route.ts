@@ -12,8 +12,20 @@ export async function GET(request: Request) {
         const limit = Math.min(parseInt(searchParams.get('limit') ?? '100'), 500);
 
         const where: Record<string, unknown> = {};
-        if (geoCode) where.geoCode = geoCode;
-        if (metricKey) where.metricKey = metricKey;
+
+        // --- Special Handling for Air Quality (Matches stations to councils) ---
+        if (metricKey === 'air_quality_pm10' && geoCode && geoCode.startsWith('S12')) {
+            const { getCouncilName } = require('@/lib/councils');
+            const councilName = getCouncilName(geoCode);
+            const bestWords = councilName.toLowerCase().replace('city of ', '').replace(' and ', ' ').split(' ').filter((w: string) => w.length > 2);
+
+            // We just ask for the metric, and we'll filter by station name in memory for the minimal payload
+            where.metricKey = metricKey;
+        } else {
+            if (geoCode) where.geoCode = geoCode;
+            if (metricKey) where.metricKey = metricKey;
+        }
+
         if (sourceSlug) where.sourceSlug = sourceSlug;
         if (from || to) {
             where.periodStart = {};
@@ -21,11 +33,58 @@ export async function GET(request: Request) {
             if (to) (where.periodStart as Record<string, Date>).lte = new Date(to);
         }
 
-        const metrics = await prisma.metricSeries.findMany({
+        const format = searchParams.get('format') ?? 'detailed'; // 'detailed' or 'minimal'
+
+        let metrics = await prisma.metricSeries.findMany({
             where,
-            orderBy: { periodStart: 'desc' },
-            take: limit,
+            orderBy: { periodStart: format === 'minimal' ? 'asc' : 'desc' },
+            take: metricKey === 'air_quality_pm10' ? 1000 : limit, // Need more records to filter stations
         });
+
+        if (metricKey === 'air_quality_pm10' && geoCode && geoCode.startsWith('S12')) {
+            const { getCouncilName } = require('@/lib/councils');
+            const councilName = getCouncilName(geoCode);
+            const bestWords = councilName.toLowerCase().replace('city of ', '').replace(' and ', ' ').split(' ').filter((w: string) => w.length > 2);
+
+            // Filter down to the station that best matches the council
+            const matchedMetrics = metrics.filter(r => {
+                const name = String((r.metadata as Record<string, string>)?.stationName || '').toLowerCase();
+                return bestWords.some((w: string) => name.includes(w));
+            });
+
+            if (matchedMetrics.length > 0) {
+                // Return only the exact matched station's history
+                const bestStationCode = matchedMetrics[0].geoCode;
+                metrics = matchedMetrics.filter(r => r.geoCode === bestStationCode);
+            } else {
+                // Fallback: Just return a Scotland-wide average per day
+                const groupedByDate: Record<string, { sum: number, avg: number, count: number, start: Date, unit: string }> = {};
+                for (const r of metrics) {
+                    const ds = r.periodStart.toISOString().split('T')[0];
+                    if (!groupedByDate[ds]) groupedByDate[ds] = { sum: 0, avg: 0, count: 0, start: r.periodStart, unit: r.unit };
+                    groupedByDate[ds].sum += r.value;
+                    groupedByDate[ds].count += 1;
+                    groupedByDate[ds].avg = groupedByDate[ds].sum / groupedByDate[ds].count;
+                }
+                metrics = Object.values(groupedByDate).map(g => ({
+                    ...metrics[0],
+                    value: Math.round(g.avg * 10) / 10,
+                    periodStart: g.start,
+                }));
+            }
+            if (format !== 'minimal') metrics = metrics.slice(0, limit);
+        }
+
+        // If minimal format requested (e.g. for TrendViewer), skip the heavy aggregation
+        if (format === 'minimal') {
+            return NextResponse.json({
+                history: metrics.map(r => ({
+                    periodStart: r.periodStart,
+                    value: r.value,
+                    unit: r.unit,
+                }))
+            });
+        }
 
         // Get distinct metric keys for the filter
         const metricKeys = await prisma.metricSeries.groupBy({

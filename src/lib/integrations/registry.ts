@@ -9,6 +9,7 @@ import { ElexonPlugin } from './elexon';
 import { OnsPlugin } from './ons';
 import { NesoCkanPlugin } from './neso-ckan';
 import { OpenChargeMapPlugin } from './openchargemap';
+import { DesnzEnergyPlugin } from './desnz-energy';
 
 const plugins: IntegrationPlugin[] = [
     // Tier A
@@ -23,6 +24,7 @@ const plugins: IntegrationPlugin[] = [
     new OnsPlugin(),
     new NesoCkanPlugin(),
     new OpenChargeMapPlugin(),
+    new DesnzEnergyPlugin(),
 ];
 
 const pluginMap = new Map<string, IntegrationPlugin>();
