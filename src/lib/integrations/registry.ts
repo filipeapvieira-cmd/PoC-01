@@ -10,6 +10,8 @@ import { OnsPlugin } from './ons';
 import { NesoCkanPlugin } from './neso-ckan';
 import { OpenChargeMapPlugin } from './openchargemap';
 import { DesnzEnergyPlugin } from './desnz-energy';
+import { Co2EmissionsPlugin } from './co2-emissions';
+import { PopulationPlugin } from './population';
 
 const plugins: IntegrationPlugin[] = [
     // Tier A
@@ -25,6 +27,8 @@ const plugins: IntegrationPlugin[] = [
     new NesoCkanPlugin(),
     new OpenChargeMapPlugin(),
     new DesnzEnergyPlugin(),
+    new Co2EmissionsPlugin(),
+    new PopulationPlugin(),
 ];
 
 const pluginMap = new Map<string, IntegrationPlugin>();

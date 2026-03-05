@@ -11,9 +11,9 @@ export const RANKING_METRICS = [
     { key: 'gas_consumption_gwh', label: 'Gas Consumption', unit: 'GWh' },
     { key: 'waste_generated_tonnes', label: 'Waste Generated', unit: 'tonnes' },
     { key: 'waste_landfilled_tonnes', label: 'Waste Landfilled', unit: 'tonnes' },
-    { key: 'ev_charger_count', label: 'Public EV Chargers', unit: 'locations' },
-    { key: 'solar_radiation', label: 'Solar Potential', unit: 'MJ/m²' },
-    { key: 'osm_greenspace_total', label: 'Green Features', unit: 'Count' },
+    { key: 'co2_per_capita_tonnes', label: 'CO₂ Per Capita', unit: 't CO₂e/person' },
+    { key: 'co2_total_kt', label: 'CO₂ Total Emissions', unit: 'kt CO₂e' },
+    { key: 'population_thousands', label: 'Population', unit: 'thousands' },
 ];
 
 export function TrendViewer({ councilCode }: { councilCode: string }) {

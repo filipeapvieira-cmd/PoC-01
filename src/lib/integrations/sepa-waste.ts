@@ -82,7 +82,7 @@ SELECT ?areaCode ?areaLabel ?periodLabel ?value WHERE {
   FILTER(STRSTARTS(STR(?obs), "http://statistics.gov.scot/data/household-waste"))
 }
 ORDER BY DESC(?periodLabel) ?areaLabel
-LIMIT 1500
+
 `.trim();
 
         let sparqlRows: Array<{ areaCode: string; areaLabel: string; periodLabel: string; value: number }> = [];
@@ -94,9 +94,10 @@ LIMIT 1500
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'Accept': 'text/csv',
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
                 },
                 body: `query=${encodeURIComponent(sparqlQuery)}`,
-                signal: AbortSignal.timeout(20000),
+                signal: AbortSignal.timeout(60000),
             });
 
             if (res.ok) {
@@ -201,39 +202,90 @@ LIMIT 1500
             }
         }
 
-        // 2. Map Tonnages regardless of source (Tonnage data isn't easily in SPARQL so we use the 2021/22 release)
+        // 2. Map Tonnages
         const volumes = data?.volumes ?? SEPA_WASTE_2122;
-        for (const [councilName, valueObj] of Object.entries(volumes)) {
-            const geoCode = nameToCode[councilName];
-            if (!geoCode) continue;
 
-            const baseMeta = {
-                councilName,
-                period: '2021-22',
-                attribution: 'SEPA Household Waste Summary Report',
-                licence: 'Open Government Licence v3.0',
-            };
+        // If we have live SPARQL history, derive historical tonnages!
+        if (data?.source === 'sparql' && data.rows && data.rows.length > 0) {
+            // Group percentages by council code
+            const historyByCouncil = new Map<string, Array<{ year: number, val: number, period: string }>>();
+            for (const row of data.rows) {
+                const code = row.areaCode.split('/').pop() ?? row.areaCode;
+                const yearMatch = row.periodLabel.match(/\d{4}/);
+                const year = yearMatch ? parseInt(yearMatch[0]) : 2021;
+                if (!historyByCouncil.has(code)) historyByCouncil.set(code, []);
+                historyByCouncil.get(code)!.push({ year, val: row.value, period: row.periodLabel });
+            }
 
-            results.push({
-                metricKey: 'waste_generated_tonnes',
-                sourceSlug: 'sepa-waste',
-                geoType: 'council', geoCode, periodStart, periodEnd,
-                value: valueObj.generated, unit: 'tonnes', metadata: baseMeta
-            });
+            for (const [councilName, valueObj] of Object.entries(volumes)) {
+                const geoCode = nameToCode[councilName];
+                if (!geoCode) continue;
 
-            results.push({
-                metricKey: 'waste_recycled_tonnes',
-                sourceSlug: 'sepa-waste',
-                geoType: 'council', geoCode, periodStart, periodEnd,
-                value: valueObj.recycled, unit: 'tonnes', metadata: baseMeta
-            });
+                const history = historyByCouncil.get(geoCode) || [];
+                // Generate a derived tonnage for every historical year we got from SPARQL
+                for (const h of history) {
+                    const dynamicPeriodStart = new Date(`${h.year}-04-01T00:00:00Z`);
+                    const dynamicPeriodEnd = new Date(`${h.year + 1}-03-31T23:59:59Z`);
 
-            results.push({
-                metricKey: 'waste_landfilled_tonnes',
-                sourceSlug: 'sepa-waste',
-                geoType: 'council', geoCode, periodStart, periodEnd,
-                value: valueObj.landfilled, unit: 'tonnes', metadata: baseMeta
-            });
+                    const baseMeta = {
+                        councilName,
+                        period: h.period,
+                        attribution: 'SEPA (Tonnages derived from historic recycling rates & 2021 baseline)',
+                        licence: 'Open Government Licence v3.0',
+                    };
+
+                    // We anchor Waste Generated to the 2021 baseline (assumes total waste volume didn't change drastically)
+                    // Then we calculate Recycled and Landfilled exactly from the historic percentage for that year!
+                    const generated = valueObj.generated;
+                    const recycled = Math.round(generated * (h.val / 100));
+                    const landfilled = generated - recycled;
+
+                    results.push({
+                        metricKey: 'waste_generated_tonnes',
+                        sourceSlug: 'sepa-waste', geoType: 'council', geoCode, periodStart: dynamicPeriodStart, periodEnd: dynamicPeriodEnd,
+                        value: generated, unit: 'tonnes', metadata: baseMeta
+                    });
+                    results.push({
+                        metricKey: 'waste_recycled_tonnes',
+                        sourceSlug: 'sepa-waste', geoType: 'council', geoCode, periodStart: dynamicPeriodStart, periodEnd: dynamicPeriodEnd,
+                        value: recycled, unit: 'tonnes', metadata: baseMeta
+                    });
+                    results.push({
+                        metricKey: 'waste_landfilled_tonnes',
+                        sourceSlug: 'sepa-waste', geoType: 'council', geoCode, periodStart: dynamicPeriodStart, periodEnd: dynamicPeriodEnd,
+                        value: landfilled, unit: 'tonnes', metadata: baseMeta
+                    });
+                }
+            }
+        } else {
+            // Fallback for static Tonnages if SPARQL failed
+            for (const [councilName, valueObj] of Object.entries(volumes)) {
+                const geoCode = nameToCode[councilName];
+                if (!geoCode) continue;
+
+                const baseMeta = {
+                    councilName,
+                    period: '2021-22',
+                    attribution: 'SEPA Household Waste Summary Report',
+                    licence: 'Open Government Licence v3.0',
+                };
+
+                results.push({
+                    metricKey: 'waste_generated_tonnes',
+                    sourceSlug: 'sepa-waste', geoType: 'council', geoCode, periodStart, periodEnd,
+                    value: valueObj.generated, unit: 'tonnes', metadata: baseMeta
+                });
+                results.push({
+                    metricKey: 'waste_recycled_tonnes',
+                    sourceSlug: 'sepa-waste', geoType: 'council', geoCode, periodStart, periodEnd,
+                    value: valueObj.recycled, unit: 'tonnes', metadata: baseMeta
+                });
+                results.push({
+                    metricKey: 'waste_landfilled_tonnes',
+                    sourceSlug: 'sepa-waste', geoType: 'council', geoCode, periodStart, periodEnd,
+                    value: valueObj.landfilled, unit: 'tonnes', metadata: baseMeta
+                });
+            }
         }
 
         return results;

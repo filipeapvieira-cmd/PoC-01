@@ -22,7 +22,10 @@ export class ScottishAirQualityPlugin implements IntegrationPlugin {
         // Step 1: Get all timeseries
         const tsUrl = 'https://uk-air.defra.gov.uk/sos-ukair/api/v1/timeseries?expanded=true';
         const tsRes = await fetch(tsUrl, {
-            headers: { 'Accept': 'application/json' },
+            headers: {
+                'Accept': 'application/json',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) CSP'
+            },
             signal: AbortSignal.timeout(20000),
         });
         const latencyMs = Date.now() - start;
@@ -64,24 +67,81 @@ export class ScottishAirQualityPlugin implements IntegrationPlugin {
             '7': 'O3'
         };
 
-        for (const ts of scottishTs) {
-            const stId = ts.station?.properties?.id;
-            const stName = ts.station?.properties?.label;
-            if (!stId || !stName) continue;
+        const now = new Date();
 
-            if (!stationMap.has(stId)) {
-                stationMap.set(stId, { stationId: stId, stationName: stName, measurements: [] });
-            }
+        // DEFRA limits to P1Y1D per request, so we loop 5 years sequentially
+        const yearEndpoints: Array<{ yearLabel: string; timespan: string }> = [];
+        for (let y = 0; y < 5; y++) {
+            const endDate = new Date(now);
+            endDate.setFullYear(endDate.getFullYear() - y);
+            const startDate = new Date(endDate);
+            startDate.setFullYear(startDate.getFullYear() - 1);
+            yearEndpoints.push({
+                yearLabel: `${startDate.getFullYear()}-${endDate.getFullYear()}`,
+                timespan: `P1Y/${endDate.toISOString()}`,
+            });
+        }
 
-            if (ts.lastValue?.value != null && ts.lastValue?.timestamp != null) {
-                const pId = ts.parameters?.phenomenon?.id ?? 'unknown';
-                stationMap.get(stId)!.measurements.push({
-                    phenomenon: phenomenonIdMap[pId] ?? `id_${pId}`,
-                    value: ts.lastValue.value,
-                    unit: ts.uom ?? 'unknown',
-                    timestamp: new Date(ts.lastValue.timestamp).toISOString(),
-                    timeseriesId: ts.id ?? 'unknown',
-                });
+        // Chunk concurrent fetches to avoid dominating the DEFRA API
+        const chunks = [];
+        const chunkSize = 10; // Smaller chunks since each request now covers a full year
+        for (let i = 0; i < scottishTs.length; i += chunkSize) {
+            chunks.push(scottishTs.slice(i, i + chunkSize));
+        }
+
+        // For each year endpoint, fetch data from all Scottish stations
+        for (const yearEp of yearEndpoints) {
+            for (const chunk of chunks) {
+                await Promise.allSettled(chunk.map(async (ts) => {
+                    const stId = ts.station?.properties?.id;
+                    const stName = ts.station?.properties?.label;
+                    const tsId = ts.id;
+
+                    if (!stId || !stName || !tsId) return;
+
+                    if (!stationMap.has(stId)) {
+                        stationMap.set(stId, { stationId: stId, stationName: stName, measurements: [] });
+                    }
+
+                    const pId = ts.parameters?.phenomenon?.id ?? 'unknown';
+                    const phenom = phenomenonIdMap[pId] ?? `id_${pId}`;
+
+                    try {
+                        const dataRes = await fetch(
+                            `https://uk-air.defra.gov.uk/sos-ukair/api/v1/timeseries/${tsId}/getData?timespan=${yearEp.timespan}`,
+                            {
+                                headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) CSP' },
+                                signal: AbortSignal.timeout(20000),
+                            }
+                        );
+
+                        if (dataRes.ok) {
+                            const history = await dataRes.json() as { values?: Array<{ timestamp: number, value: number }> };
+                            if (history.values && Array.isArray(history.values)) {
+                                // Keep 1 reading per day (noon) to create a manageable dataset
+                                const seenDates = new Set<string>();
+                                for (const reading of history.values) {
+                                    if (reading.value !== null && reading.timestamp) {
+                                        const date = new Date(reading.timestamp);
+                                        const dateKey = date.toISOString().split('T')[0];
+                                        if (date.getHours() === 12 && !seenDates.has(dateKey)) {
+                                            seenDates.add(dateKey);
+                                            stationMap.get(stId)!.measurements.push({
+                                                phenomenon: phenom,
+                                                value: reading.value,
+                                                unit: ts.uom ?? 'unknown',
+                                                timestamp: date.toISOString(),
+                                                timeseriesId: tsId,
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } catch (err) {
+                        // Silently skip failed timeseries — some may have no data for older years
+                    }
+                }));
             }
         }
 
