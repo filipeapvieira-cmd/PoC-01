@@ -25,7 +25,7 @@ export function TrendViewer({ councilCode }: { councilCode: string }) {
         async function fetchHistory() {
             setLoading(true);
             try {
-                const res = await fetch(`/api/metrics?geoCode=${councilCode}&metricKey=${selectedMetric}&format=minimal&years=10`);
+                const res = await fetch(`/api/metrics?geoCode=${councilCode}&metricKey=${selectedMetric}&format=minimal&years=20`);
                 if (res.ok) {
                     const json = await res.json();
 

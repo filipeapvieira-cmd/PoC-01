@@ -116,8 +116,41 @@ export async function runIntegration(
                 },
             });
 
-            // Persist normalized records
+            // Persist normalized records (with deduplication)
             if (normalized.length > 0) {
+                // Delete existing records that would be duplicated by this ingestion
+                // Build unique compound keys to avoid redundant deletes
+                const seen = new Set<string>();
+                const deleteConditions: Array<{ metricKey: string; sourceSlug: string; geoCode: string; periodStart: Date }> = [];
+                for (const m of normalized) {
+                    const key = `${m.metricKey}|${m.sourceSlug}|${m.geoCode}|${m.periodStart.toISOString()}`;
+                    if (!seen.has(key)) {
+                        seen.add(key);
+                        deleteConditions.push({
+                            metricKey: m.metricKey,
+                            sourceSlug: m.sourceSlug,
+                            geoCode: m.geoCode,
+                            periodStart: m.periodStart,
+                        });
+                    }
+                }
+
+                // Batch delete in chunks to avoid overly large queries
+                const CHUNK = 100;
+                for (let i = 0; i < deleteConditions.length; i += CHUNK) {
+                    const chunk = deleteConditions.slice(i, i + CHUNK);
+                    await prisma.metricSeries.deleteMany({
+                        where: {
+                            OR: chunk.map(c => ({
+                                metricKey: c.metricKey,
+                                sourceSlug: c.sourceSlug,
+                                geoCode: c.geoCode,
+                                periodStart: c.periodStart,
+                            })),
+                        },
+                    });
+                }
+
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const records = normalized.map(m => ({
                     metricKey: m.metricKey,

@@ -82,7 +82,7 @@ SELECT ?areaCode ?areaLabel ?periodLabel ?value WHERE {
   FILTER(STRSTARTS(STR(?obs), "http://statistics.gov.scot/data/household-waste"))
 }
 ORDER BY DESC(?periodLabel) ?areaLabel
-LIMIT 200
+LIMIT 1500
 `.trim();
 
         let sparqlRows: Array<{ areaCode: string; areaLabel: string; periodLabel: string; value: number }> = [];

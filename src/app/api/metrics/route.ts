@@ -9,7 +9,7 @@ export async function GET(request: Request) {
         const sourceSlug = searchParams.get('sourceSlug') ?? undefined;
         const from = searchParams.get('from');
         const to = searchParams.get('to');
-        const years = Math.min(Math.max(parseInt(searchParams.get('years') ?? '10', 10) || 10, 1), 10);
+        const years = Math.min(Math.max(parseInt(searchParams.get('years') ?? '20', 10) || 20, 1), 20);
         const limit = Math.min(parseInt(searchParams.get('limit') ?? '100'), 500);
 
         const where: Record<string, unknown> = {};
