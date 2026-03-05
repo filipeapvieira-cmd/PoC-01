@@ -9,6 +9,7 @@ export async function GET(request: Request) {
         const sourceSlug = searchParams.get('sourceSlug') ?? undefined;
         const from = searchParams.get('from');
         const to = searchParams.get('to');
+        const years = Math.min(Math.max(parseInt(searchParams.get('years') ?? '10', 10) || 10, 1), 10);
         const limit = Math.min(parseInt(searchParams.get('limit') ?? '100'), 500);
 
         const where: Record<string, unknown> = {};
@@ -31,6 +32,11 @@ export async function GET(request: Request) {
             where.periodStart = {};
             if (from) (where.periodStart as Record<string, Date>).gte = new Date(from);
             if (to) (where.periodStart as Record<string, Date>).lte = new Date(to);
+        } else {
+            // Default to the broadest useful trend window while keeping payloads bounded.
+            const start = new Date();
+            start.setFullYear(start.getFullYear() - years);
+            where.periodStart = { gte: start };
         }
 
         const format = searchParams.get('format') ?? 'detailed'; // 'detailed' or 'minimal'
@@ -38,7 +44,9 @@ export async function GET(request: Request) {
         let metrics = await prisma.metricSeries.findMany({
             where,
             orderBy: { periodStart: format === 'minimal' ? 'asc' : 'desc' },
-            take: metricKey === 'air_quality_pm10' ? 1000 : limit, // Need more records to filter stations
+            take: format === 'minimal'
+                ? (metricKey === 'air_quality_pm10' ? 5000 : 4000)
+                : (metricKey === 'air_quality_pm10' ? 1000 : limit), // Need more records to filter stations
         });
 
         if (metricKey === 'air_quality_pm10' && geoCode && geoCode.startsWith('S12')) {
