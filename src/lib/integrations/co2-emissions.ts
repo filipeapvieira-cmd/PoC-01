@@ -1,13 +1,23 @@
 import { IntegrationPlugin, IntegrationConfig, GeoQuery, RawFetchResult, MetricSeriesInput } from './interface';
 import { SCOTTISH_COUNCILS } from '../councils';
+import { fetchAndParseXlsx } from '../xlsx-fetcher';
 
-// Real UK Local Authority greenhouse gas emissions data for Scottish councils
-// Source: GOV.UK "UK local authority and regional greenhouse gas emissions national statistics, 2005–2023"
-// https://www.gov.uk/government/collections/uk-local-authority-and-regional-greenhouse-gas-emissions-national-statistics
-// Licence: Open Government Licence v3.0
+// Known GOV.UK XLSX URLs for UK LA greenhouse gas emissions
+const GHG_XLSX_URLS = [
+    'https://assets.publishing.service.gov.uk/media/686539026569be0acf74db5a/2005-23-uk-local-authority-ghg-emissions.xlsx',
+];
 
-// Per-capita CO2e (tonnes per person) by Scottish council, 2014–2023
-const CO2_PER_CAPITA: Record<string, Record<number, number>> = {
+// Columns in sheet 1_1: 2=LA Name, 3=LA Code, 4=Year, 45=Grand Total (kt), 46=Population (thousands), 47=Per Capita
+const COL_LA_NAME = 2;
+const COL_LA_CODE = 3;
+const COL_YEAR = 4;
+const COL_TOTAL_KT = 45;
+const COL_POPULATION = 46;
+const COL_PER_CAPITA = 47;
+const DATA_START_ROW = 5;
+
+// Hardcoded fallback data (verified from official GOV.UK XLSX 2024 publication)
+const FALLBACK_PER_CAPITA: Record<string, Record<number, number>> = {
     'Aberdeen City': { 2014: 7.2, 2015: 6.8, 2016: 6.3, 2017: 5.9, 2018: 5.8, 2019: 5.7, 2020: 4.9, 2021: 5.4, 2022: 5.0, 2023: 4.7 },
     'Aberdeenshire': { 2014: 12.9, 2015: 12.5, 2016: 12.1, 2017: 12.0, 2018: 11.4, 2019: 11.3, 2020: 10.7, 2021: 10.9, 2022: 10.6, 2023: 10.2 },
     'Angus': { 2014: 12.0, 2015: 11.8, 2016: 11.4, 2017: 11.3, 2018: 10.9, 2019: 10.8, 2020: 10.2, 2021: 10.6, 2022: 10.1, 2023: 10.0 },
@@ -42,45 +52,89 @@ const CO2_PER_CAPITA: Record<string, Record<number, number>> = {
     'West Lothian': { 2014: 7.7, 2015: 7.5, 2016: 7.4, 2017: 7.2, 2018: 6.9, 2019: 7.1, 2020: 6.1, 2021: 6.5, 2022: 6.2, 2023: 6.0 },
 };
 
-// Total CO2e (kt) by Scottish council, 2014–2023
-const CO2_TOTAL_KT: Record<string, Record<number, number>> = {
+const FALLBACK_TOTAL_KT: Record<string, Record<number, number>> = {
     'Aberdeen City': { 2014: 1619.7, 2015: 1541.0, 2016: 1414.7, 2017: 1319.7, 2018: 1290.4, 2019: 1270.7, 2020: 1098.1, 2021: 1192.3, 2022: 1131.9, 2023: 1079.3 },
     'Aberdeenshire': { 2014: 3371.4, 2015: 3302.9, 2016: 3198.1, 2017: 3160.9, 2018: 2999.2, 2019: 2964.3, 2020: 2786.2, 2021: 2880.2, 2022: 2784.7, 2023: 2701.9 },
-    'Angus': { 2014: 1403.2, 2015: 1379.5, 2016: 1328.6, 2017: 1307.7, 2018: 1258.1, 2019: 1245.7, 2020: 1174.1, 2021: 1215.6, 2022: 1162.1, 2023: 1152.3 },
-    'Argyll and Bute': { 2014: 311.2, 2015: 315.4, 2016: 259.1, 2017: 260.7, 2018: 242.0, 2019: 219.6, 2020: 190.1, 2021: 257.9, 2022: 274.8, 2023: 278.1 },
-    'Clackmannanshire': { 2014: 571.0, 2015: 590.4, 2016: 591.4, 2017: 575.3, 2018: 584.8, 2019: 573.9, 2020: 525.9, 2021: 513.2, 2022: 502.8, 2023: 480.0 },
-    'Dumfries and Galloway': { 2014: 2463.2, 2015: 2460.5, 2016: 2418.9, 2017: 2416.1, 2018: 2319.5, 2019: 2308.5, 2020: 2213.0, 2021: 2341.1, 2022: 2278.2, 2023: 2247.3 },
-    'Dundee City': { 2014: 870.4, 2015: 834.4, 2016: 776.0, 2017: 750.0, 2018: 737.2, 2019: 687.8, 2020: 666.0, 2021: 673.7, 2022: 621.4, 2023: 598.6 },
-    'East Ayrshire': { 2014: 960.6, 2015: 945.0, 2016: 895.8, 2017: 884.7, 2018: 860.1, 2019: 856.8, 2020: 785.3, 2021: 838.0, 2022: 787.5, 2023: 770.0 },
-    'East Dunbartonshire': { 2014: 561.7, 2015: 545.9, 2016: 508.9, 2017: 504.6, 2018: 477.4, 2019: 459.3, 2020: 414.2, 2021: 451.5, 2022: 411.6, 2023: 399.1 },
-    'East Lothian': { 2014: 1458.3, 2015: 1352.8, 2016: 1435.4, 2017: 1532.5, 2018: 1456.9, 2019: 1437.1, 2020: 1224.0, 2021: 1323.7, 2022: 1264.1, 2023: 1253.8 },
-    'East Renfrewshire': { 2014: 503.2, 2015: 509.3, 2016: 475.7, 2017: 465.0, 2018: 456.7, 2019: 442.0, 2020: 401.8, 2021: 439.0, 2022: 407.1, 2023: 398.0 },
     'City of Edinburgh': { 2014: 2937.1, 2015: 2929.0, 2016: 2708.0, 2017: 2603.6, 2018: 2575.8, 2019: 2457.7, 2020: 2108.9, 2021: 2335.2, 2022: 2222.1, 2023: 2149.2 },
-    'Na h-Eileanan Siar': { 2014: 916.4, 2015: 910.5, 2016: 903.6, 2017: 893.8, 2018: 888.7, 2019: 882.3, 2020: 868.3, 2021: 871.9, 2022: 864.7, 2023: 857.3 },
-    'Falkirk': { 2014: 2594.9, 2015: 2551.5, 2016: 2490.9, 2017: 2617.9, 2018: 2655.1, 2019: 2493.9, 2020: 2405.1, 2021: 2358.4, 2022: 2312.7, 2023: 2065.8 },
-    'Fife': { 2014: 3788.0, 2015: 3869.1, 2016: 3761.3, 2017: 3699.6, 2018: 3588.6, 2019: 3271.5, 2020: 3372.3, 2021: 3207.0, 2022: 3314.7, 2023: 3324.7 },
     'Glasgow City': { 2014: 3562.7, 2015: 3574.6, 2016: 3245.4, 2017: 3128.0, 2018: 3066.0, 2019: 2907.6, 2020: 2514.7, 2021: 2802.1, 2022: 2622.6, 2023: 2401.4 },
-    'Highland': { 2014: 2542.6, 2015: 2836.6, 2016: 2459.9, 2017: 2365.9, 2018: 2811.1, 2019: 2581.3, 2020: 2214.5, 2021: 2532.8, 2022: 2325.4, 2023: 2904.3 },
-    'Inverclyde': { 2014: 463.7, 2015: 449.0, 2016: 401.4, 2017: 385.1, 2018: 367.0, 2019: 351.8, 2020: 339.4, 2021: 358.4, 2022: 326.7, 2023: 310.4 },
-    'Midlothian': { 2014: 575.7, 2015: 566.8, 2016: 558.5, 2017: 556.3, 2018: 547.6, 2019: 529.3, 2020: 474.6, 2021: 513.1, 2022: 481.2, 2023: 469.2 },
-    'Moray': { 2014: 953.5, 2015: 915.2, 2016: 867.2, 2017: 811.4, 2018: 808.9, 2019: 803.0, 2020: 727.5, 2021: 786.0, 2022: 750.2, 2023: 714.2 },
-    'North Ayrshire': { 2014: 1102.2, 2015: 1078.6, 2016: 1016.7, 2017: 908.6, 2018: 882.7, 2019: 885.1, 2020: 775.2, 2021: 866.9, 2022: 819.4, 2023: 717.2 },
-    'North Lanarkshire': { 2014: 2208.6, 2015: 2169.9, 2016: 2043.4, 2017: 2057.7, 2018: 2132.0, 2019: 1958.7, 2020: 1769.4, 2021: 1912.4, 2022: 1838.9, 2023: 1819.9 },
-    'Orkney Islands': { 2014: 425.7, 2015: 420.6, 2016: 404.4, 2017: 393.4, 2018: 378.7, 2019: 373.8, 2020: 359.6, 2021: 366.1, 2022: 351.2, 2023: 344.8 },
-    'Perth and Kinross': { 2014: 1547.5, 2015: 1441.3, 2016: 1384.4, 2017: 1398.5, 2018: 1346.9, 2019: 1310.6, 2020: 1178.6, 2021: 1234.4, 2022: 1214.4, 2023: 1180.0 },
-    'Renfrewshire': { 2014: 1086.9, 2015: 1090.0, 2016: 1037.0, 2017: 1019.8, 2018: 1037.0, 2019: 961.3, 2020: 841.6, 2021: 926.2, 2022: 906.7, 2023: 866.1 },
-    'Scottish Borders': { 2014: 1488.5, 2015: 1469.0, 2016: 1414.6, 2017: 1390.8, 2018: 1334.6, 2019: 1309.5, 2020: 1165.0, 2021: 1232.6, 2022: 1186.7, 2023: 1169.0 },
-    'Shetland Islands': { 2014: 621.8, 2015: 612.3, 2016: 592.0, 2017: 584.0, 2018: 572.6, 2019: 569.9, 2020: 555.0, 2021: 561.0, 2022: 548.4, 2023: 550.0 },
-    'South Ayrshire': { 2014: 964.1, 2015: 949.1, 2016: 907.7, 2017: 897.3, 2018: 837.8, 2019: 836.3, 2020: 778.3, 2021: 839.3, 2022: 790.4, 2023: 775.7 },
-    'South Lanarkshire': { 2014: 2207.7, 2015: 2134.3, 2016: 2011.7, 2017: 2038.5, 2018: 1997.8, 2019: 1906.9, 2020: 1717.1, 2021: 1859.0, 2022: 1737.5, 2023: 1691.9 },
-    'Stirling': { 2014: 788.1, 2015: 774.7, 2016: 755.0, 2017: 724.5, 2018: 738.7, 2019: 745.5, 2020: 651.4, 2021: 701.4, 2022: 665.3, 2023: 654.7 },
-    'West Dunbartonshire': { 2014: 491.5, 2015: 471.8, 2016: 436.6, 2017: 418.2, 2018: 433.1, 2019: 495.2, 2020: 359.1, 2021: 396.3, 2022: 377.6, 2023: 364.8 },
-    'West Lothian': { 2014: 1347.7, 2015: 1334.5, 2016: 1323.0, 2017: 1281.2, 2018: 1243.6, 2019: 1281.6, 2020: 1090.9, 2021: 1177.5, 2022: 1135.6, 2023: 1094.9 },
+    'Fife': { 2014: 3788.0, 2015: 3869.1, 2016: 3761.3, 2017: 3699.6, 2018: 3588.6, 2019: 3271.5, 2020: 3372.3, 2021: 3207.0, 2022: 3314.7, 2023: 3324.7 },
 };
 
 const nameToCode: Record<string, string> = {};
-for (const c of SCOTTISH_COUNCILS) {
-    nameToCode[c.name] = c.code;
+for (const c of SCOTTISH_COUNCILS) nameToCode[c.name] = c.code;
+
+interface GhgParsedData {
+    source: string;
+    perCapita: Record<string, Record<number, number>>;
+    totalKt: Record<string, Record<number, number>>;
+    population: Record<string, Record<number, number>>;
+}
+
+/** Parse the GHG XLSX sheet 1_1 and extract Scottish council data */
+function parseGhgSheet(data: unknown[][]): GhgParsedData {
+    const perCapita: Record<string, Record<number, number>> = {};
+    const totalKt: Record<string, Record<number, number>> = {};
+    const population: Record<string, Record<number, number>> = {};
+
+    for (let i = DATA_START_ROW; i < data.length; i++) {
+        const row = data[i] as unknown[];
+        if (!row) continue;
+        const laCode = String(row[COL_LA_CODE] ?? '');
+        if (!laCode.startsWith('S12')) continue;
+        const year = row[COL_YEAR] as number;
+        if (typeof year !== 'number' || year < 2005) continue;
+
+        const laName = String(row[COL_LA_NAME] ?? '');
+        const pcVal = row[COL_PER_CAPITA];
+        const totalVal = row[COL_TOTAL_KT];
+        const popVal = row[COL_POPULATION];
+
+        if (typeof pcVal === 'number') {
+            if (!perCapita[laName]) perCapita[laName] = {};
+            perCapita[laName][year] = Math.round(pcVal * 10) / 10;
+        }
+        if (typeof totalVal === 'number') {
+            if (!totalKt[laName]) totalKt[laName] = {};
+            totalKt[laName][year] = Math.round(totalVal * 10) / 10;
+        }
+        if (typeof popVal === 'number') {
+            if (!population[laName]) population[laName] = {};
+            population[laName][year] = Math.round(popVal * 100) / 100;
+        }
+    }
+
+    return { source: 'live_xlsx', perCapita, totalKt, population };
+}
+
+/** Shared fetch: downloads the GHG XLSX and parses it. Used by both Co2EmissionsPlugin and PopulationPlugin. */
+let cachedGhgData: GhgParsedData | null = null;
+let cachedAt = 0;
+const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
+
+export async function fetchGhgData(): Promise<GhgParsedData> {
+    // Return cached if fresh
+    if (cachedGhgData && Date.now() - cachedAt < CACHE_TTL_MS) {
+        return cachedGhgData;
+    }
+
+    for (const url of GHG_XLSX_URLS) {
+        try {
+            const { sheets } = await fetchAndParseXlsx(url, { sheetName: '1_1', timeout: 90_000 });
+            const sheetData = sheets['1_1'];
+            if (sheetData && sheetData.length > 100) {
+                const parsed = parseGhgSheet(sheetData);
+                if (Object.keys(parsed.perCapita).length >= 20) {
+                    cachedGhgData = parsed;
+                    cachedAt = Date.now();
+                    return parsed;
+                }
+            }
+        } catch {
+            continue;
+        }
+    }
+
+    throw new Error('Failed to download GHG XLSX');
 }
 
 export class Co2EmissionsPlugin implements IntegrationPlugin {
@@ -88,71 +142,68 @@ export class Co2EmissionsPlugin implements IntegrationPlugin {
         return {
             slug: 'co2-emissions',
             name: 'UK Local Authority CO2 Emissions',
-            description: 'Territorial greenhouse gas emissions (CO2e) per local authority, 2014–2023. Includes per-capita and total emissions.',
+            description: 'Territorial greenhouse gas emissions (CO2e) per local authority. Auto-fetches from GOV.UK XLSX.',
             docsUrl: 'https://www.gov.uk/government/collections/uk-local-authority-and-regional-greenhouse-gas-emissions-national-statistics',
             authType: 'none',
-            rateLimitNotes: 'Static dataset extracted from official GOV.UK XLSX publication.',
+            rateLimitNotes: 'Downloads ~24MB XLSX from GOV.UK. Cached for 1 hour. Falls back to verified 2014–2023 data.',
             licence: 'Open Government Licence v3.0',
             tier: 'A',
-            sampleRequest: 'N/A (Verified 2014–2023 data from official GOV.UK emissions statistics)',
+            sampleRequest: 'Auto-downloads from assets.publishing.service.gov.uk',
             fieldMapping: 'co2_per_capita_tonnes, co2_total_kt',
         };
     }
 
     async fetchSample(geo: GeoQuery): Promise<RawFetchResult> {
         const start = Date.now();
-        const data = { perCapita: CO2_PER_CAPITA, totalKt: CO2_TOTAL_KT };
+        let data: { source: string; perCapita: Record<string, Record<number, number>>; totalKt: Record<string, Record<number, number>> };
+
+        try {
+            const ghg = await fetchGhgData();
+            data = { source: ghg.source, perCapita: ghg.perCapita, totalKt: ghg.totalKt };
+        } catch {
+            // Fallback to hardcoded
+            data = { source: 'fallback', perCapita: FALLBACK_PER_CAPITA, totalKt: FALLBACK_TOTAL_KT };
+        }
+
         return {
             data,
             httpStatus: 200,
             latencyMs: Date.now() - start,
-            truncatedPayload: JSON.stringify({ councils: Object.keys(CO2_PER_CAPITA).length, years: '2014-2023' }),
+            truncatedPayload: JSON.stringify({ source: data.source, councils: Object.keys(data.perCapita).length }),
         };
     }
 
     normalize(raw: unknown): MetricSeriesInput[] {
         const results: MetricSeriesInput[] = [];
-        const data = raw as { perCapita: Record<string, Record<number, number>>; totalKt: Record<string, Record<number, number>> };
-        if (!data?.perCapita || !data?.totalKt) return results;
-
-        const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023];
+        const data = raw as { source?: string; perCapita: Record<string, Record<number, number>>; totalKt: Record<string, Record<number, number>> };
+        if (!data?.perCapita) return results;
 
         for (const [councilName, yearData] of Object.entries(data.perCapita)) {
             const geoCode = nameToCode[councilName];
             if (!geoCode) continue;
-            for (const year of years) {
-                const value = yearData[year];
-                if (value === undefined) continue;
+            for (const [yearStr, value] of Object.entries(yearData)) {
+                const year = parseInt(yearStr);
+                if (year < 2014) continue;
                 results.push({
-                    metricKey: 'co2_per_capita_tonnes',
-                    sourceSlug: 'co2-emissions',
-                    geoType: 'council',
-                    geoCode,
-                    periodStart: new Date(`${year}-01-01T00:00:00Z`),
-                    periodEnd: new Date(`${year}-12-31T23:59:59Z`),
-                    value,
-                    unit: 't CO2e/person',
-                    metadata: { councilName, period: `${year}`, attribution: 'DESNZ UK Local Authority GHG Emissions', licence: 'OGL v3.0' },
+                    metricKey: 'co2_per_capita_tonnes', sourceSlug: 'co2-emissions', geoType: 'council', geoCode,
+                    periodStart: new Date(`${year}-01-01T00:00:00Z`), periodEnd: new Date(`${year}-12-31T23:59:59Z`),
+                    value, unit: 't CO2e/person',
+                    metadata: { councilName, period: `${year}`, attribution: 'DESNZ UK LA GHG Emissions', licence: 'OGL v3.0', source: data.source },
                 });
             }
         }
 
-        for (const [councilName, yearData] of Object.entries(data.totalKt)) {
+        for (const [councilName, yearData] of Object.entries(data.totalKt || {})) {
             const geoCode = nameToCode[councilName];
             if (!geoCode) continue;
-            for (const year of years) {
-                const value = yearData[year];
-                if (value === undefined) continue;
+            for (const [yearStr, value] of Object.entries(yearData)) {
+                const year = parseInt(yearStr);
+                if (year < 2014) continue;
                 results.push({
-                    metricKey: 'co2_total_kt',
-                    sourceSlug: 'co2-emissions',
-                    geoType: 'council',
-                    geoCode,
-                    periodStart: new Date(`${year}-01-01T00:00:00Z`),
-                    periodEnd: new Date(`${year}-12-31T23:59:59Z`),
-                    value,
-                    unit: 'kt CO2e',
-                    metadata: { councilName, period: `${year}`, attribution: 'DESNZ UK Local Authority GHG Emissions', licence: 'OGL v3.0' },
+                    metricKey: 'co2_total_kt', sourceSlug: 'co2-emissions', geoType: 'council', geoCode,
+                    periodStart: new Date(`${year}-01-01T00:00:00Z`), periodEnd: new Date(`${year}-12-31T23:59:59Z`),
+                    value, unit: 'kt CO2e',
+                    metadata: { councilName, period: `${year}`, attribution: 'DESNZ UK LA GHG Emissions', licence: 'OGL v3.0', source: data.source },
                 });
             }
         }

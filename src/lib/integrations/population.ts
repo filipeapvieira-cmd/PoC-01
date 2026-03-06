@@ -1,12 +1,9 @@
 import { IntegrationPlugin, IntegrationConfig, GeoQuery, RawFetchResult, MetricSeriesInput } from './interface';
 import { SCOTTISH_COUNCILS } from '../councils';
+import { fetchGhgData } from './co2-emissions';
 
-// Mid-year population estimates (thousands) from GOV.UK Local Authority GHG Emissions XLSX
-// Original source: National Records of Scotland (NRS) mid-year population estimates
-// https://www.nrscotland.gov.uk/statistics-and-data/statistics/statistics-by-theme/population/population-estimates/mid-year-population-estimates/
-// Licence: Open Government Licence v3.0
-
-const POPULATION_THOUSANDS: Record<string, Record<number, number>> = {
+// Hardcoded fallback: NRS mid-year population estimates (thousands)
+const FALLBACK_POP: Record<string, Record<number, number>> = {
     'Aberdeen City': { 2014: 226.17, 2015: 226.68, 2016: 225.34, 2017: 223.89, 2018: 222.17, 2019: 222.76, 2020: 222.71, 2021: 220.63, 2022: 224.25, 2023: 227.75 },
     'Aberdeenshire': { 2014: 261.35, 2015: 263.25, 2016: 263.46, 2017: 262.92, 2018: 262.22, 2019: 261.9, 2020: 261.51, 2021: 263.14, 2022: 263.75, 2023: 264.32 },
     'Angus': { 2014: 116.55, 2015: 116.87, 2016: 116.45, 2017: 116.09, 2018: 115.61, 2019: 115.53, 2020: 114.99, 2021: 114.95, 2022: 114.67, 2023: 114.82 },
@@ -42,19 +39,17 @@ const POPULATION_THOUSANDS: Record<string, Record<number, number>> = {
 };
 
 const nameToCode: Record<string, string> = {};
-for (const c of SCOTTISH_COUNCILS) {
-    nameToCode[c.name] = c.code;
-}
+for (const c of SCOTTISH_COUNCILS) nameToCode[c.name] = c.code;
 
 export class PopulationPlugin implements IntegrationPlugin {
     getConfig(): IntegrationConfig {
         return {
             slug: 'population',
             name: 'Mid-Year Population Estimates',
-            description: 'NRS mid-year population estimates by Scottish council, 2014–2023 (in thousands).',
+            description: 'NRS mid-year population estimates by Scottish council. Auto-fetches from GOV.UK GHG XLSX.',
             docsUrl: 'https://www.nrscotland.gov.uk/statistics-and-data/statistics/statistics-by-theme/population/population-estimates/',
             authType: 'none',
-            rateLimitNotes: 'Static dataset from NRS via GOV.UK emissions XLSX.',
+            rateLimitNotes: 'Shares the GHG XLSX download with CO2 plugin (cached). Falls back to verified 2014–2023 data.',
             licence: 'Open Government Licence v3.0',
             tier: 'B',
             sampleRequest: 'N/A',
@@ -64,37 +59,47 @@ export class PopulationPlugin implements IntegrationPlugin {
 
     async fetchSample(geo: GeoQuery): Promise<RawFetchResult> {
         const start = Date.now();
+        let population: Record<string, Record<number, number>>;
+        let source = 'fallback';
+
+        try {
+            const ghg = await fetchGhgData();
+            if (Object.keys(ghg.population).length >= 20) {
+                population = ghg.population;
+                source = 'live_xlsx';
+            } else {
+                population = FALLBACK_POP;
+            }
+        } catch {
+            population = FALLBACK_POP;
+        }
+
         return {
-            data: { population: POPULATION_THOUSANDS },
+            data: { source, population },
             httpStatus: 200,
             latencyMs: Date.now() - start,
-            truncatedPayload: JSON.stringify({ councils: Object.keys(POPULATION_THOUSANDS).length, years: '2014-2023' }),
+            truncatedPayload: JSON.stringify({ source, councils: Object.keys(population).length }),
         };
     }
 
     normalize(raw: unknown): MetricSeriesInput[] {
         const results: MetricSeriesInput[] = [];
-        const data = raw as { population: Record<string, Record<number, number>> };
+        const data = raw as { source?: string; population: Record<string, Record<number, number>> };
         if (!data?.population) return results;
-
-        const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023];
 
         for (const [councilName, yearData] of Object.entries(data.population)) {
             const geoCode = nameToCode[councilName];
             if (!geoCode) continue;
-            for (const year of years) {
-                const value = yearData[year];
-                if (value === undefined) continue;
+            for (const [yearStr, value] of Object.entries(yearData)) {
+                const year = parseInt(yearStr);
+                if (year < 2014) continue;
                 results.push({
                     metricKey: 'population_thousands',
-                    sourceSlug: 'population',
-                    geoType: 'council',
-                    geoCode,
+                    sourceSlug: 'population', geoType: 'council', geoCode,
                     periodStart: new Date(`${year}-06-30T00:00:00Z`),
                     periodEnd: new Date(`${year}-06-30T23:59:59Z`),
-                    value,
-                    unit: 'thousands',
-                    metadata: { councilName, period: `${year}`, attribution: 'NRS Mid-Year Population Estimates via GOV.UK', licence: 'OGL v3.0' },
+                    value, unit: 'thousands',
+                    metadata: { councilName, period: `${year}`, attribution: 'NRS via GOV.UK', licence: 'OGL v3.0', source: data.source },
                 });
             }
         }

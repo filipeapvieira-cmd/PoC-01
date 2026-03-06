@@ -1,13 +1,22 @@
 import { IntegrationPlugin, IntegrationConfig, GeoQuery, RawFetchResult, MetricSeriesInput } from './interface';
 import { SCOTTISH_COUNCILS } from '../councils';
+import { fetchAndParseXlsx } from '../xlsx-fetcher';
 
-// Real DESNZ sub-national energy consumption data (GWh) for Scottish councils
-// Source: GOV.UK "Subnational electricity/gas consumption statistics 2005-2024" (OGL v3.0)
-// Electricity: https://www.gov.uk/government/statistical-data-sets/regional-and-local-authority-electricity-consumption-statistics
-// Gas: https://www.gov.uk/government/statistical-data-sets/gas-sales-and-numbers-of-customers-by-region-and-local-authority
+// Known GOV.UK XLSX URLs for DESNZ sub-national energy data
+// These are updated annually; the engine tries the latest first, then falls back
+const ELEC_XLSX_URLS = [
+    'https://assets.publishing.service.gov.uk/media/67c5e6bce2fb8e24d976c6e7/Subnational-electricity-consumption-statistics-2005-2023.xlsx',
+    'https://assets.publishing.service.gov.uk/media/6581c1c723b70a000d234d09/subnational-electricity-consumption-statistics-2005-2022.xlsx',
+];
+const GAS_XLSX_URLS = [
+    'https://assets.publishing.service.gov.uk/media/67c5e8c123b70a001db4ecc3/Subnational-gas-consumption-statistics-2005-2023.xlsx',
+    'https://assets.publishing.service.gov.uk/media/6581c282ed3c34000d3bfcf4/subnational-gas-consumption-statistics-2005-2022.xlsx',
+];
 
-// Total electricity consumption (GWh) by Scottish council, 2014–2022
-const ELECTRICITY_GWH: Record<string, Record<number, number>> = {
+const SCOTTISH_COUNCIL_NAMES = new Set(SCOTTISH_COUNCILS.map(c => c.name));
+
+// Hardcoded fallback: verified DESNZ data 2014–2022
+const FALLBACK_ELEC: Record<string, Record<number, number>> = {
     'Aberdeen City': { 2014: 369, 2015: 357, 2016: 341, 2017: 331, 2018: 325, 2019: 321, 2020: 333, 2021: 318, 2022: 289 },
     'Aberdeenshire': { 2014: 471, 2015: 467, 2016: 455, 2017: 448, 2018: 438, 2019: 433, 2020: 461, 2021: 434, 2022: 393 },
     'Angus': { 2014: 197, 2015: 194, 2016: 190, 2017: 186, 2018: 183, 2019: 182, 2020: 190, 2021: 179, 2022: 163 },
@@ -42,8 +51,7 @@ const ELECTRICITY_GWH: Record<string, Record<number, number>> = {
     'West Lothian': { 2014: 268, 2015: 269, 2016: 263, 2017: 259, 2018: 253, 2019: 255, 2020: 269, 2021: 257, 2022: 232 },
 };
 
-// Total gas consumption (GWh) by Scottish council, 2014–2022
-const GAS_GWH: Record<string, Record<number, number>> = {
+const FALLBACK_GAS: Record<string, Record<number, number>> = {
     'Aberdeen City': { 2014: 1353, 2015: 1353, 2016: 1343, 2017: 1360, 2018: 1346, 2019: 1363, 2020: 1386, 2021: 1371, 2022: 1193 },
     'Aberdeenshire': { 2014: 1038, 2015: 1048, 2016: 1051, 2017: 1068, 2018: 1066, 2019: 1075, 2020: 1095, 2021: 1091, 2022: 947 },
     'Angus': { 2014: 561, 2015: 555, 2016: 560, 2017: 582, 2018: 579, 2019: 586, 2020: 599, 2021: 584, 2022: 505 },
@@ -78,10 +86,54 @@ const GAS_GWH: Record<string, Record<number, number>> = {
     'West Lothian': { 2014: 1033, 2015: 1018, 2016: 1029, 2017: 1069, 2018: 1062, 2019: 1090, 2020: 1113, 2021: 1071, 2022: 942 },
 };
 
-// Map council names to S12xxxxx codes
 const nameToCode: Record<string, string> = {};
-for (const c of SCOTTISH_COUNCILS) {
-    nameToCode[c.name] = c.code;
+for (const c of SCOTTISH_COUNCILS) nameToCode[c.name] = c.code;
+
+/**
+ * Parse a DESNZ year-sheet and extract total GWh per Scottish council.
+ * The "Total" column is typically column 7+ in most sheets.
+ */
+function extractYearFromSheet(data: unknown[][]): Record<string, number> {
+    const result: Record<string, number> = {};
+    // Find header row with "Total" to locate the correct column
+    let totalColIdx = -1;
+    let dataStart = 0;
+    for (let i = 0; i < Math.min(10, data.length); i++) {
+        const row = data[i];
+        if (!row) continue;
+        for (let j = 0; j < (row as unknown[]).length; j++) {
+            const cell = String((row as unknown[])[j] ?? '').toLowerCase();
+            if (cell === 'total') { totalColIdx = j; dataStart = i + 1; break; }
+        }
+        if (totalColIdx >= 0) break;
+    }
+    if (totalColIdx < 0) return result;
+
+    for (let i = dataStart; i < data.length; i++) {
+        const row = data[i] as unknown[];
+        if (!row) continue;
+        // Check first 3 columns for a council name
+        for (let c = 0; c < Math.min(3, row.length); c++) {
+            const name = String(row[c] ?? '').trim();
+            if (SCOTTISH_COUNCIL_NAMES.has(name) && typeof row[totalColIdx] === 'number') {
+                result[name] = Math.round(row[totalColIdx] as number);
+                break;
+            }
+        }
+    }
+    return result;
+}
+
+async function tryFetchXlsx(urls: string[]): Promise<Record<string, unknown[][]> | null> {
+    for (const url of urls) {
+        try {
+            const { sheets } = await fetchAndParseXlsx(url, { timeout: 45_000 });
+            return sheets;
+        } catch {
+            continue;
+        }
+    }
+    return null;
 }
 
 export class DesnzEnergyPlugin implements IntegrationPlugin {
@@ -89,60 +141,103 @@ export class DesnzEnergyPlugin implements IntegrationPlugin {
         return {
             slug: 'desnz-energy',
             name: 'DESNZ Local Energy Consumption',
-            description: 'Department for Energy Security and Net Zero sub-national electricity and gas consumption data for Scottish local authorities (2014–2022).',
+            description: 'Sub-national electricity and gas consumption data from DESNZ XLSX publications.',
             docsUrl: 'https://www.gov.uk/government/collections/sub-national-electricity-consumption-data',
             authType: 'none',
-            rateLimitNotes: 'Static dataset extracted from official GOV.UK XLSX publications.',
+            rateLimitNotes: 'Downloads official XLSX from GOV.UK (updated annually). Falls back to verified 2014–2022 data.',
             licence: 'Open Government Licence v3.0',
             tier: 'B',
-            sampleRequest: 'N/A (Verified 2014–2022 data from official DESNZ spreadsheets)',
-            fieldMapping: 'electricity_gwh -> electricity_consumption_gwh, gas_gwh -> gas_consumption_gwh',
+            sampleRequest: 'Auto-downloads from assets.publishing.service.gov.uk',
+            fieldMapping: 'electricity_consumption_gwh, gas_consumption_gwh',
         };
     }
 
     async fetchSample(geo: GeoQuery): Promise<RawFetchResult> {
         const start = Date.now();
-        const data = {
-            years: [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022],
-            electricity: ELECTRICITY_GWH,
-            gas: GAS_GWH,
-        };
-        const latencyMs = Date.now() - start;
+        let electricity: Record<string, Record<number, number>> = {};
+        let gas: Record<string, Record<number, number>> = {};
+        let source = 'fallback';
+        const years: number[] = [];
+
+        try {
+            // Try to download live XLSX files
+            const [elecSheets, gasSheets] = await Promise.all([
+                tryFetchXlsx(ELEC_XLSX_URLS),
+                tryFetchXlsx(GAS_XLSX_URLS),
+            ]);
+
+            if (elecSheets) {
+                source = 'live_xlsx';
+                // Each year is a separate sheet named "2014", "2015", etc.
+                for (const [sheetName, data] of Object.entries(elecSheets)) {
+                    const yearMatch = sheetName.match(/^(\d{4})$/);
+                    if (!yearMatch) continue;
+                    const year = parseInt(yearMatch[1]);
+                    if (year < 2014) continue;
+                    years.push(year);
+                    const vals = extractYearFromSheet(data as unknown[][]);
+                    for (const [name, val] of Object.entries(vals)) {
+                        if (!electricity[name]) electricity[name] = {};
+                        electricity[name][year] = val;
+                    }
+                }
+            }
+
+            if (gasSheets) {
+                for (const [sheetName, data] of Object.entries(gasSheets)) {
+                    const yearMatch = sheetName.match(/^(\d{4})$/);
+                    if (!yearMatch) continue;
+                    const year = parseInt(yearMatch[1]);
+                    if (year < 2014) continue;
+                    const vals = extractYearFromSheet(data as unknown[][]);
+                    for (const [name, val] of Object.entries(vals)) {
+                        if (!gas[name]) gas[name] = {};
+                        gas[name][year] = val;
+                    }
+                }
+            }
+
+            // Validate: if we got fewer than 5 councils, fall back
+            if (Object.keys(electricity).length < 5) throw new Error('Insufficient data from XLSX');
+        } catch {
+            source = 'fallback';
+            electricity = FALLBACK_ELEC;
+            gas = FALLBACK_GAS;
+            years.length = 0;
+            years.push(2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022);
+        }
+
         return {
-            data,
+            data: { source, years: years.sort(), electricity, gas },
             httpStatus: 200,
-            latencyMs,
-            truncatedPayload: JSON.stringify({ years: data.years, councils: Object.keys(data.electricity).length }),
+            latencyMs: Date.now() - start,
+            truncatedPayload: JSON.stringify({ source, yearsCount: years.length, councils: Object.keys(electricity).length }),
         };
     }
 
     normalize(raw: unknown): MetricSeriesInput[] {
         const results: MetricSeriesInput[] = [];
         const data = raw as {
-            years: number[];
+            source?: string;
+            years?: number[];
             electricity: Record<string, Record<number, number>>;
             gas: Record<string, Record<number, number>>;
         };
 
         if (!data?.electricity || !data?.gas) return results;
-        const years = data.years || [2022];
 
         for (const [councilName, yearData] of Object.entries(data.electricity)) {
             const geoCode = nameToCode[councilName];
             if (!geoCode) continue;
-            for (const year of years) {
-                const value = yearData[year];
-                if (value === undefined) continue;
+            for (const [yearStr, value] of Object.entries(yearData)) {
+                const year = parseInt(yearStr);
                 results.push({
                     metricKey: 'electricity_consumption_gwh',
-                    sourceSlug: 'desnz-energy',
-                    geoType: 'council',
-                    geoCode,
+                    sourceSlug: 'desnz-energy', geoType: 'council', geoCode,
                     periodStart: new Date(`${year}-01-01T00:00:00Z`),
                     periodEnd: new Date(`${year}-12-31T23:59:59Z`),
-                    value,
-                    unit: 'GWh',
-                    metadata: { councilName, period: `${year}`, attribution: 'DESNZ Sub-national Energy Consumption Statistics', licence: 'Open Government Licence v3.0' },
+                    value, unit: 'GWh',
+                    metadata: { councilName, period: `${year}`, attribution: 'DESNZ Sub-national Energy Statistics', licence: 'OGL v3.0', source: data.source },
                 });
             }
         }
@@ -150,19 +245,15 @@ export class DesnzEnergyPlugin implements IntegrationPlugin {
         for (const [councilName, yearData] of Object.entries(data.gas)) {
             const geoCode = nameToCode[councilName];
             if (!geoCode) continue;
-            for (const year of years) {
-                const value = yearData[year];
-                if (value === undefined) continue;
+            for (const [yearStr, value] of Object.entries(yearData)) {
+                const year = parseInt(yearStr);
                 results.push({
                     metricKey: 'gas_consumption_gwh',
-                    sourceSlug: 'desnz-energy',
-                    geoType: 'council',
-                    geoCode,
+                    sourceSlug: 'desnz-energy', geoType: 'council', geoCode,
                     periodStart: new Date(`${year}-01-01T00:00:00Z`),
                     periodEnd: new Date(`${year}-12-31T23:59:59Z`),
-                    value,
-                    unit: 'GWh',
-                    metadata: { councilName, period: `${year}`, attribution: 'DESNZ Sub-national Energy Consumption Statistics', licence: 'Open Government Licence v3.0' },
+                    value, unit: 'GWh',
+                    metadata: { councilName, period: `${year}`, attribution: 'DESNZ Sub-national Energy Statistics', licence: 'OGL v3.0', source: data.source },
                 });
             }
         }
