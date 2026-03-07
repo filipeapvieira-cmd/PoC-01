@@ -12,6 +12,7 @@ import { OpenChargeMapPlugin } from './openchargemap';
 import { DesnzEnergyPlugin } from './desnz-energy';
 import { Co2EmissionsPlugin } from './co2-emissions';
 import { PopulationPlugin } from './population';
+import { RenewablesPlugin } from './renewables';
 
 const plugins: IntegrationPlugin[] = [
     // Tier A
@@ -29,6 +30,7 @@ const plugins: IntegrationPlugin[] = [
     new DesnzEnergyPlugin(),
     new Co2EmissionsPlugin(),
     new PopulationPlugin(),
+    new RenewablesPlugin(),
 ];
 
 const pluginMap = new Map<string, IntegrationPlugin>();

@@ -6,10 +6,11 @@ import { Loader2 } from 'lucide-react';
 
 const TREND_METRICS = [
     { key: 'co2_total_kt', label: 'Total CO₂ Emissions', unit: 'kt CO₂e', color: 'var(--accent-red)' },
-    { key: 'co2_per_capita_tonnes', label: 'CO₂ Per Capita', unit: 't CO₂e/person', color: 'var(--accent-orange)' },
-    { key: 'electricity_consumption_gwh', label: 'Electricity Consumption', unit: 'GWh', color: 'var(--accent-yellow)' },
+    { key: 'co2_per_capita_tonnes', label: 'CO₂ Per Capita', unit: 't CO₂e/person', color: 'var(--accent-amber)' },
+    { key: 'electricity_consumption_gwh', label: 'Electricity Consumption', unit: 'GWh', color: 'var(--accent-emerald)' },
     { key: 'gas_consumption_gwh', label: 'Gas Consumption', unit: 'GWh', color: 'var(--accent-cyan)' },
     { key: 'population_thousands', label: 'Population', unit: 'thousands', color: 'var(--accent-purple)' },
+    { key: 'renewable_generation_gwh', label: 'Renewable Generation', unit: 'GWh', color: 'var(--accent-emerald)' },
 ];
 
 export function MultiTrendViewer({ councilCode }: { councilCode: string }) {

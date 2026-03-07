@@ -14,6 +14,7 @@ export const RANKING_METRICS = [
     { key: 'co2_per_capita_tonnes', label: 'CO₂ Per Capita', unit: 't CO₂e/person' },
     { key: 'co2_total_kt', label: 'CO₂ Total Emissions', unit: 'kt CO₂e' },
     { key: 'population_thousands', label: 'Population', unit: 'thousands' },
+    { key: 'renewable_generation_gwh', label: 'Renewable Generation', unit: 'GWh' },
 ];
 
 export function TrendViewer({ councilCode }: { councilCode: string }) {
