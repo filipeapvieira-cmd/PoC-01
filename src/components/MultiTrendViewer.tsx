@@ -11,6 +11,8 @@ const TREND_METRICS = [
     { key: 'gas_consumption_gwh', label: 'Gas Consumption', unit: 'GWh', color: 'var(--accent-cyan)' },
     { key: 'population_thousands', label: 'Population', unit: 'thousands', color: 'var(--accent-purple)' },
     { key: 'renewable_generation_gwh', label: 'Renewable Generation', unit: 'GWh', color: 'var(--accent-emerald)' },
+    { key: 'recycling_rate_pct', label: 'Household Recycling', unit: '%', color: 'var(--accent-cyan)' },
+    { key: 'public_transport_journeys', label: 'Bus Passenger Journeys', unit: 'million', color: 'var(--accent-red)' },
 ];
 
 export function MultiTrendViewer({ councilCode }: { councilCode: string }) {

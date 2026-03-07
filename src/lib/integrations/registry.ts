@@ -13,6 +13,7 @@ import { DesnzEnergyPlugin } from './desnz-energy';
 import { Co2EmissionsPlugin } from './co2-emissions';
 import { PopulationPlugin } from './population';
 import { RenewablesPlugin } from './renewables';
+import { PublicTransportPlugin } from './public-transport';
 
 const plugins: IntegrationPlugin[] = [
     // Tier A
@@ -31,6 +32,7 @@ const plugins: IntegrationPlugin[] = [
     new Co2EmissionsPlugin(),
     new PopulationPlugin(),
     new RenewablesPlugin(),
+    new PublicTransportPlugin(),
 ];
 
 const pluginMap = new Map<string, IntegrationPlugin>();
